@@ -11,6 +11,7 @@ var G: Global
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
   hoedown_dir = "hoedown_lib" ## Where the original source will be copied.
+  system_include = "include <" ## String of for a system include in a header.
 
   name = "mangler"
   version_str* = name & "-0.1.0" ## Program version as a string. \
@@ -85,9 +86,37 @@ proc copy_original_source() =
   src_dir.copy_dir(hoedown_dir)
 
 
+proc mangle_header(src, dest: string) =
+  ## Copies a header form src into dest removing system includes.
+  ##
+  ## The removal is based on finding the string "#include <", which is quite
+  ## boring but works.
+  echo "Mangling ", src, " -> ", dest
+  var buf = new_string_of_cap(int(src.get_file_size))
+  for line in src.lines:
+    if line.find(system_include) < 1:
+      buf.add(line & "\n")
+  dest.write_file(buf)
+
+
+proc mangle_headers() =
+  ## Mangles source headers to a temporary directory removing system includes.
+  assert hoedown_dir.exists_dir
+  header_dir.remove_dir
+  header_dir.create_dir
+
+  for kind, path in hoedown_dir.walk_dir:
+    if kind != pcFile: continue
+    let (dir, name, ext) = path.split_file
+    if ext != ".h": continue
+    let dest = header_dir/name & ext
+    path.mangle_header(dest)
+
+
 proc main() =
   ## Main entry point of the program.
   process_commandline()
   copy_original_source()
+  mangle_headers()
 
 when isMainModule: main()
