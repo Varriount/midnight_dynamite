@@ -10,7 +10,7 @@ var G: Global
 
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
-  hoedown_dir = "hoedown_copy" ## Where the original source will be copied.
+  hoedown_dir = "hoedown_lib" ## Where the original source will be copied.
 
   name = "mangler"
   version_str* = name & "-0.1.0" ## Program version as a string. \
@@ -74,9 +74,20 @@ proc process_commandline() =
   if not exists_dir(G.hoedown_from/"src"):
     abort "Weird, I was expecting a 'src' subdirectory in the hoedown dir."
 
+
+proc copy_original_source() =
+  ## Copies files form G.hoedown_from/src into hoedown_dir.
+  ##
+  ## The target directory is first erased to avoid leaving debris.
+  let src_dir = G.hoedown_from/"src"
+  echo "Refreshing source from ", src_dir
+  hoedown_dir.remove_dir
+  src_dir.copy_dir(hoedown_dir)
+
+
 proc main() =
   ## Main entry point of the program.
   process_commandline()
-  echo "Processing ", G.hoedown_from
+  copy_original_source()
 
 when isMainModule: main()
