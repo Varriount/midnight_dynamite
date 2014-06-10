@@ -1,4 +1,4 @@
-import strutils, argument_parser, tables, os
+import strutils, argument_parser, tables, os, re
 
 type
   Global = object ## \
@@ -11,7 +11,8 @@ var G: Global
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
   hoedown_dir = "hoedown_lib" ## Where the original source will be copied.
-  system_include = "include <" ## String of for a system include in a header.
+  system_include_re = (s: r""".*?include\W*?<""", flags: {reExtended}) ## \
+  # Regular expression to detect global includes we want to remove.
 
   name = "mangler"
   version_str* = name & "-0.1.0" ## Program version as a string. \
@@ -91,10 +92,16 @@ proc mangle_header(src, dest: string) =
   ##
   ## The removal is based on finding the string "#include <", which is quite
   ## boring but works.
+  var
+    re_include {.global.}: TRegEx = nil
+
+  if re_include.isNil:
+    re_include = re(system_include_re.s, system_include_re.flags)
+
   echo "Mangling ", src, " -> ", dest
   var buf = new_string_of_cap(int(src.get_file_size))
   for line in src.lines:
-    if line.find(system_include) < 1:
+    if not line.contains(re_include):
       buf.add(line & "\n")
   dest.write_file(buf)
 
