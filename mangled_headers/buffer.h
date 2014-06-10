@@ -4,12 +4,15 @@
 #define HOEDOWN_BUFFER_H
 
 
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #if defined(_MSC_VER)
-#define __attribute__(x)
+
 #define inline __inline
 #endif
 
@@ -49,7 +52,7 @@ void hoedown_buffer_init(
 );
 
 /* hoedown_buffer_new: allocation of a new buffer */
-hoedown_buffer *hoedown_buffer_new(size_t unit) __attribute__ ((malloc));
+hoedown_buffer *hoedown_buffer_new(size_t unit) ;
 
 /* hoedown_buffer_free: decrease the reference count and free the buffer if needed */
 void hoedown_buffer_free(hoedown_buffer *buf);
@@ -79,7 +82,7 @@ void hoedown_buffer_slurp(hoedown_buffer *buf, size_t len);
 const char *hoedown_buffer_cstr(hoedown_buffer *buf);
 
 /* hoedown_buffer_printf: formatted printing to a buffer */
-void hoedown_buffer_printf(hoedown_buffer *buf, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
+void hoedown_buffer_printf(hoedown_buffer *buf, const char *fmt, ...) ;
 
 #ifdef __cplusplus
 }

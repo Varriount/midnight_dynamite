@@ -11,8 +11,9 @@ var G: Global
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
   hoedown_dir = "hoedown_lib" ## Where the original source will be copied.
-  system_include_re = (s: r""".*?include\W*?<""", flags: {reExtended}) ## \
-  # Regular expression to detect global includes we want to remove.
+  exclude_re = ["#include.*[>]", "#define.*__attribute__.*[)]",
+    "__attribute__.*[)]"] ## \
+    ## Regular expressions that will clean up strange artifacts.
 
   name = "mangler"
   version_str* = name & "-0.1.0" ## Program version as a string. \
@@ -93,16 +94,20 @@ proc mangle_header(src, dest: string) =
   ## The removal is based on finding the string "#include <", which is quite
   ## boring but works.
   var
-    re_include {.global.}: TRegEx = nil
+    re_exclude {.global.}: seq[TRegEx] = @[]
 
-  if re_include.isNil:
-    re_include = re(system_include_re.s, system_include_re.flags)
+  # Build the regular expressions with groups before and after the match.
+  if re_exclude.len < 1:
+    for regex in exclude_re:
+      re_exclude.add(re("^(.*)(" & regex & ")(.*$)", {reStudy}))
 
   echo "Mangling ", src, " -> ", dest
   var buf = new_string_of_cap(int(src.get_file_size))
   for line in src.lines:
-    if not line.contains(re_include):
-      buf.add(line & "\n")
+    var l = line
+    for regex in re_exclude:
+      l = l.replacef(regex, "$1$3")
+    buf.add(l & "\n")
   dest.write_file(buf)
 
 
