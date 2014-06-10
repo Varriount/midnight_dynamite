@@ -8,5 +8,6 @@ nimcache/
 # Full paths.
 /README.html
 /license.html
+/mangled_headers/
 /mangler
 /nakefile

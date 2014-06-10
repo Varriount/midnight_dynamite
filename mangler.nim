@@ -1,4 +1,4 @@
-import strutils, argument_parser, tables, os, re
+import strutils, argument_parser, tables, os, re, osproc
 
 type
   Global = object ## \
@@ -125,10 +125,22 @@ proc mangle_headers() =
     path.mangle_header(dest)
 
 
+proc convert_document_header() =
+  ## Generates a hoedown.nim file from the preprocessed document.h header.
+  let
+    src = header_dir/"document.h"
+    dest = header_dir/"hoedown.h"
+  var ret = exec_shell_cmd("cpp " & src & " " & dest)
+  if ret != 0: quit("Could not run preprocessor on " & src)
+  ret = exec_shell_cmd("c2nim " & dest)
+  if ret != 0: quit("Could not run c2nim on " & dest)
+
+
 proc main() =
   ## Main entry point of the program.
   process_commandline()
   copy_original_source()
   mangle_headers()
+  convert_document_header()
 
 when isMainModule: main()
