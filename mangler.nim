@@ -14,6 +14,17 @@ const
   exclude_re = ["#include.*[>]", "#define.*__attribute__.*[)]",
     "__attribute__.*[)]"] ## \
     ## Regular expressions that will clean up strange artifacts.
+  replacements = [["size_t", "csize"], ["uint8_t", "uint8"],
+    ["hoedown_autolink type", "hoedown_autolink autolink_type"]] ## \
+    ## Strings that will be replaced in the input during header generation.
+
+  prefix_nim = "{.push importc.}\n" ## String to add before the output nim.
+  postfix_nim = """
+const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
+""" ## String to add after the output nim.
+
+  prune_struct = "struct hoedown_html_renderer_state" ## \
+  ## Name of the struct we prune.
 
   name = "mangler"
   version_str* = name & "-0.1.0" ## Program version as a string. \
@@ -102,12 +113,24 @@ proc mangle_header(src, dest: string) =
       re_exclude.add(re("^(.*)(" & regex & ")(.*$)", {reStudy}))
 
   echo "Mangling ", src, " -> ", dest
-  var buf = new_string_of_cap(int(src.get_file_size))
+  var
+    buf = new_string_of_cap(int(src.get_file_size))
+    prunning_struct = false
+  # While processing replacements, avoid copying the anonymous state struct.
   for line in src.lines:
-    var l = line
-    for regex in re_exclude:
-      l = l.replacef(regex, "$1$3")
-    buf.add(l & "\n")
+    if prunning_struct:
+      if line[0] == '}':
+        prunning_struct = false
+    else:
+      if line.find(prune_struct) == 0:
+        prunning_struct = true
+      else:
+        var l = line
+        for regex in re_exclude:
+          l = l.replacef(regex, "$1$3")
+        for replacement in replacements:
+          l = l.replace(replacement[0], replacement[1])
+        buf.add(l & "\n")
   dest.write_file(buf)
 
 
@@ -127,13 +150,21 @@ proc mangle_headers() =
 
 proc convert_document_header() =
   ## Generates a hoedown.nim file from the preprocessed document.h header.
+  ##
+  ## After generation prepends prefix_nim and appends postfix_nim to the output
+  ## nimrod source.
   let
-    src = header_dir/"document.h"
-    dest = header_dir/"hoedown.h"
+    src = header_dir/"html.h"
+    dest = header_dir/"html2.h"
+    nim = header_dir/"hoedown.nim"
   var ret = exec_shell_cmd("cpp " & src & " " & dest)
   if ret != 0: quit("Could not run preprocessor on " & src)
-  ret = exec_shell_cmd("c2nim " & dest)
+  ret = exec_shell_cmd("c2nim -o:" & nim & " " & dest)
   if ret != 0: quit("Could not run c2nim on " & dest)
+
+  # Mangle output file.
+  let buf = nim.read_file
+  nim.write_file(prefix_nim & "\n" & buf & "\n" & postfix_nim)
 
 
 proc main() =
