@@ -120,3 +120,39 @@ proc free*(r: var md_buffer) =
   if r.h.is_nil: return
   r.h.hoedown_buffer_free
   r.h = nil
+
+
+proc render*(document: md_document; buffer: md_buffer; md_text: string) =
+  ## Renders the `document` into the `buffer`.
+  ##
+  ## If `buffer` already contains text, it will be preserved. Call
+  ## `buffer.reset()` if you want to clean it previously.
+  ##
+  ## If `md_text` is nil, or `document` or `buffer` have not been initialized,
+  ## this proc will assert in debug builds and will likely crash in release
+  ## builds.
+  assert(not document.h.is_nil, "Uninitialized document")
+  assert(not buffer.h.is_nil, "Uninitialized buffer")
+  assert(not md_text.is_nil, "Can't process nil text")
+  document.h.hoedown_document_render(buffer.h,
+    cast[ptr uint8](md_text.cstring), md_text.len)
+
+
+proc `$`*(buffer: md_buffer): string =
+  ## Returns the contents of the `md_buffer` as a Nimrod string.
+  ##
+  ## This proc will assert in debug builds if the buffer has not been
+  ## initialised. In release builds it will likely crash.
+  assert(not buffer.h.is_nil, "Buffer was not initialised")
+  let ret = buffer.h.hoedown_buffer_cstr
+  assert(not ret.is_nil, "Error reading from converted buffer")
+  result = $ret
+
+
+proc reset*(buffer: md_buffer) =
+  ## Cleans up the buffer for reuse.
+  ##
+  ## This proc will assert in debug builds if `buffer` has not been
+  ## initialised. In release builds it will likely crash.
+  assert(not buffer.h.is_nil, "Buffer was not initialised")
+  buffer.h.hoedown_buffer_reset

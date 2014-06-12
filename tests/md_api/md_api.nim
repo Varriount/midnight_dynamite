@@ -1,7 +1,7 @@
 import midnight_dynamite
 
 const
-  md = """# Title
+  input_md = """# Title
 
 This is [a link](http://www.google.es).
 """
@@ -11,20 +11,14 @@ when isMainModule:
   var
     md_r = init_md_renderer()
     md_doc = md_r.document()
-    md_html = init_md_buffer()
-  var
-    r = hoedown_html_renderer_new(0, 0)
-    doc = hoedown_document_new(r, 0, 16)
-    html = hoedown_buffer_new(16)
+    md_buffer = init_md_buffer()
 
-  doc.hoedown_document_render(html, cast[ptr uint8](md.cstring), md.len)
-  #echo html.hoedown_buffer_cstr
+  md_doc.render(md_buffer, input_md)
+  md_buffer.reset
+  md_doc.render(md_buffer, input_md)
+  echo md_buffer
 
-  html.hoedown_buffer_free
-  doc.hoedown_document_free
-  r.hoedown_html_renderer_free
-
-  md_html.free
+  md_buffer.free
   md_doc.free
   md_r.free
 
