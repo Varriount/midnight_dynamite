@@ -16,10 +16,21 @@ when isMainModule:
   md_doc.render(md_buffer, input_md)
   md_buffer.reset
   md_doc.render(md_buffer, input_md)
-  echo md_buffer
+  let low_level_buffer = $md_buffer
 
   md_buffer.free
   md_doc.free
   md_r.free
+
+  # Repeat using the convenience proc.
+  var
+    md_params = init_md_params()
+
+  let high_level_buffer = md_params.render(input_md)
+
+  md_params.free
+
+  assert low_level_buffer == high_level_buffer
+  echo high_level_buffer
 
   echo "Done."

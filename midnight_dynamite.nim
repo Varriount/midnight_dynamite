@@ -47,6 +47,11 @@ type
   md_render_flags* = distinct int ## Valid type for md_renderer construction.
   md_doc_flags* = distinct int ## Valid type for document extensions.
 
+  md_params* = object ## Convenience bundling of the individual types.
+    renderer*: md_renderer
+    document*: md_document
+    buffer*: md_buffer
+
 const
   md_render_default* = md_render_flags(0)
   md_render_skip_html* = md_render_flags(HOEDOWN_HTML_SKIP_HTML)
@@ -195,3 +200,73 @@ proc `or`*(a, b: md_render_flags): md_render_flags =
 proc `or`*(a, b: md_doc_flags): md_doc_flags =
   ## Allows or'ing two md_doc_flags.
   result = md_doc_flags(int(a) or int(b))
+
+
+proc init*(p: var md_params;
+    render_flags = md_render_default; render_nesting_level = 0;
+    extension_flags = md_doc_flags(0); document_max_nesting = 16;
+    buffer_unit = 16) =
+  ## Inits the md_params.
+  ##
+  ## On debug builds this will assert if the params are already initialised.
+  ## In release builds the behaviour is unknown.
+  ##
+  ## You need to call free() on the md_params when you have finished or you
+  ## will leak memory.
+  assert p.renderer.h.is_nil, "Double initialization attempt"
+  p.renderer.init(render_flags, render_nesting_level)
+  p.document = p.renderer.document(extension_flags, document_max_nesting)
+  p.buffer.init(buffer_unit)
+
+
+proc init_md_params*(
+    render_flags = md_render_default; render_nesting_level = 0;
+    extension_flags = md_doc_flags(0); document_max_nesting = 16;
+    buffer_unit = 16): md_params =
+  ## Convenience wrapper over *init()*.
+  result.init(render_flags, render_nesting_level,
+    extension_flags, document_max_nesting, buffer_unit)
+
+
+proc free*(p: var md_params) =
+  ## Frees resources allocated by the parameters.
+  ##
+  ## You are required to call this or you will leak memory. If you are not
+  ## sure, you can call this many times over and it won't hurt.
+  if p.renderer.h.is_nil: return
+  p.renderer.free
+  p.document.free
+  p.buffer.free
+
+
+proc reset*(p: var md_params) =
+  ## Cleans up the rendered buffer for reuse.
+  ##
+  ## This proc will assert in debug builds if `buffer` has not been
+  ## initialised. In release builds it will likely crash.
+  p.buffer.reset
+
+
+proc add*(p: var md_params; md_text: string) =
+  ## Adds the `md_text` to the markdown rendered buffer.
+  ##
+  ## Call `p.reset()` if you want to clean the stored text previously.
+  ##
+  ## If the params have not been initialized, this proc will assert in debug
+  ## builds and will likely crash in release
+  p.document.render(p.buffer, md_text)
+
+
+proc `$`*(p: md_params): string =
+  ## Returns the rendered string so far as a Nimrod string.
+  ##
+  ## This proc will assert in debug builds if the buffer has not been
+  ## initialised. In release builds it will likely crash.
+  result = $p.buffer
+
+
+proc render*(p: var md_params; md_text: string): string =
+  ## Convenience proc which resets the buffer, renders it, and returns it.
+  p.reset
+  p.add(md_text)
+  result = $p
