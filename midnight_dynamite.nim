@@ -33,3 +33,34 @@ export hoedown_html_smartypants
 #export hoedown_stack_pop
 #export hoedown_stack_top
 #export hoedown_version
+
+type
+  md_renderer* = object
+    h: ptr hoedown_renderer
+
+  md_document* = object
+    h: ptr hoedown_document
+
+
+proc init*(r: var md_renderer; render_flags, nesting_level = 0) =
+  ## Inits the md_renderer.
+  ##
+  ## On debug builds this will asserts if the renderer is already initialised.
+  ## In release builds the behaviour is unknown.
+  assert r.h.is_nil, "Double initialization attempt!"
+  r.h = hoedown_html_renderer_new(render_flags.cuint, nesting_level.cint)
+
+
+proc init_md_renderer*(render_flags, nesting_level = 0): md_renderer =
+  ## Convenience wrapper over *init()*.
+  result.init(render_flags, nesting_level)
+
+
+proc free*(r: var md_renderer) =
+  ## Frees resources allocated by this renderer.
+  ##
+  ## You are required to call this or you will leak memory. If you are not
+  ## sure, you can call this many times over and it won't hurt.
+  if r.h.is_nil: return
+  r.h.hoedown_html_renderer_free
+  r.h = nil
