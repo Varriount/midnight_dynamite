@@ -10,7 +10,7 @@ var G: Global
 
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
-  hoedown_dir = "hoedown_lib" ## Where the original source will be copied.
+  lib_dir = "midnight_dynamite" ## Where the original source will be copied.
   exclude_re = ["#include.*[>]", "#define.*__attribute__.*[)]",
     "__attribute__.*[)]"] ## \
     ## Regular expressions that will clean up strange artifacts.
@@ -90,13 +90,13 @@ proc process_commandline() =
 
 
 proc copy_original_source() =
-  ## Copies files form G.hoedown_from/src into hoedown_dir.
+  ## Copies files form G.hoedown_from/src into lib_dir.
   ##
   ## The target directory is first erased to avoid leaving debris.
   let src_dir = G.hoedown_from/"src"
   echo "Refreshing source from ", src_dir
-  hoedown_dir.remove_dir
-  src_dir.copy_dir(hoedown_dir)
+  lib_dir.remove_dir
+  src_dir.copy_dir(lib_dir)
 
 
 proc mangle_header(src, dest: string) =
@@ -136,11 +136,11 @@ proc mangle_header(src, dest: string) =
 
 proc mangle_headers() =
   ## Mangles source headers to a temporary directory removing system includes.
-  assert hoedown_dir.exists_dir
+  assert lib_dir.exists_dir
   header_dir.remove_dir
   header_dir.create_dir
 
-  for kind, path in hoedown_dir.walk_dir:
+  for kind, path in lib_dir.walk_dir:
     if kind != pcFile: continue
     let (dir, name, ext) = path.split_file
     if ext != ".h": continue
