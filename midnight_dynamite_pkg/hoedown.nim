@@ -150,12 +150,14 @@ proc hoedown_html_smartypants*(ob: ptr hoedown_buffer; text: ptr uint8;
                                size: csize)
 const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
 
-{.compile: "midnight_dynamite/autolink.c".}
-{.compile: "midnight_dynamite/buffer.c".}
-{.compile: "midnight_dynamite/document.c".}
-{.compile: "midnight_dynamite/escape.c".}
-{.compile: "midnight_dynamite/html.c".}
-{.compile: "midnight_dynamite/html_blocks.c".}
-{.compile: "midnight_dynamite/html_smartypants.c".}
-{.compile: "midnight_dynamite/stack.c".}
-{.compile: "midnight_dynamite/version.c".}
+# Force using relative path, see https://github.com/Araq/Nimrod/issues/1262.
+# In the future the directory might have to be removed.
+{.compile: "midnight_dynamite_pkg/autolink.c".}
+{.compile: "midnight_dynamite_pkg/buffer.c".}
+{.compile: "midnight_dynamite_pkg/document.c".}
+{.compile: "midnight_dynamite_pkg/escape.c".}
+{.compile: "midnight_dynamite_pkg/html.c".}
+{.compile: "midnight_dynamite_pkg/html_blocks.c".}
+{.compile: "midnight_dynamite_pkg/html_smartypants.c".}
+{.compile: "midnight_dynamite_pkg/stack.c".}
+{.compile: "midnight_dynamite_pkg/version.c".}
