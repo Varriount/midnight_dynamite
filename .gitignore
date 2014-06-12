@@ -11,5 +11,6 @@ wrapper/
 /README.html
 /license.html
 /mangler/mangler
-/midnight_dynamite/hoedown
+/midnight_dynamite
+/midnight_dynamite_pkg/hoedown
 /nakefile

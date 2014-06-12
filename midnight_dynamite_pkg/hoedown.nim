@@ -150,12 +150,12 @@ proc hoedown_html_smartypants*(ob: ptr hoedown_buffer; text: ptr uint8;
                                size: csize)
 const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
 
-{.compile: "autolink.c".}
-{.compile: "buffer.c".}
-{.compile: "document.c".}
-{.compile: "escape.c".}
-{.compile: "html.c".}
-{.compile: "html_blocks.c".}
-{.compile: "html_smartypants.c".}
-{.compile: "stack.c".}
-{.compile: "version.c".}
+{.compile: "midnight_dynamite/autolink.c".}
+{.compile: "midnight_dynamite/buffer.c".}
+{.compile: "midnight_dynamite/document.c".}
+{.compile: "midnight_dynamite/escape.c".}
+{.compile: "midnight_dynamite/html.c".}
+{.compile: "midnight_dynamite/html_blocks.c".}
+{.compile: "midnight_dynamite/html_smartypants.c".}
+{.compile: "midnight_dynamite/stack.c".}
+{.compile: "midnight_dynamite/version.c".}
