@@ -23,6 +23,12 @@ const
 const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
 """ ## String to add after the output nim.
 
+  manual_includes = """
+#include "escape.h"
+#include "stack.h"
+#include "version.h"
+""" ## Extra manual includes to cover the whole API during conversion.
+
   prune_struct = "struct hoedown_html_renderer_state" ## \
   ## Name of the struct we prune.
 
@@ -132,10 +138,17 @@ proc convert_document_header() =
   ## from lib_dir.
   let
     src = header_dir/"html.h"
+    mangled_src = header_dir/"html_extra.h"
     dest = header_dir/"html2.h"
     nim = header_dir/"hoedown.nim"
-  var ret = exec_shell_cmd("cpp " & src & " " & dest)
-  if ret != 0: quit("Could not run preprocessor on " & src)
+
+  # Add extra headers to generate complete wrapper.
+  let original_src = src.read_file
+  mangled_src.write_file(original_src & manual_includes)
+  finally: mangled_src.remove_file
+
+  var ret = exec_shell_cmd("cpp " & mangled_src & " " & dest)
+  if ret != 0: quit("Could not run preprocessor on " & mangled_src)
   ret = exec_shell_cmd("c2nim -o:" & nim & " " & dest)
   if ret != 0: quit("Could not run c2nim on " & dest)
 
