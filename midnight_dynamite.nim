@@ -44,8 +44,20 @@ type
   md_buffer* = object ## Wraps a raw hoedown_buffer type.
     h: ptr hoedown_buffer
 
+  md_render_flags* = distinct int ## Valid type for md_renderer construction.
 
-proc init*(r: var md_renderer; render_flags, nesting_level = 0) =
+const
+  md_render_default* = md_render_flags(0)
+  md_render_skip_html* = md_render_flags(HOEDOWN_HTML_SKIP_HTML)
+  md_render_html_escape* = md_render_flags(HOEDOWN_HTML_ESCAPE)
+  md_render_expand_tabs* = md_render_flags(HOEDOWN_HTML_EXPAND_TABS)
+  md_render_safelink* = md_render_flags(HOEDOWN_HTML_SAFELINK)
+  md_render_hard_wrap* = md_render_flags(HOEDOWN_HTML_HARD_WRAP)
+  md_render_use_xhtml* = md_render_flags(HOEDOWN_HTML_USE_XHTML)
+
+
+proc init*(r: var md_renderer;
+    render_flags = md_render_default; nesting_level = 0) =
   ## Inits the md_renderer.
   ##
   ## On debug builds this will assert if the renderer is already initialised.
@@ -57,7 +69,8 @@ proc init*(r: var md_renderer; render_flags, nesting_level = 0) =
   r.h = hoedown_html_renderer_new(render_flags.cuint, nesting_level.cint)
 
 
-proc init_md_renderer*(render_flags, nesting_level = 0): md_renderer =
+proc init_md_renderer*(render_flags = md_render_default,
+    nesting_level = 0): md_renderer =
   ## Convenience wrapper over *init()*.
   result.init(render_flags, nesting_level)
 
@@ -156,3 +169,8 @@ proc reset*(buffer: md_buffer) =
   ## initialised. In release builds it will likely crash.
   assert(not buffer.h.is_nil, "Buffer was not initialised")
   buffer.h.hoedown_buffer_reset
+
+
+proc `or`*(a, b: md_render_flags): md_render_flags =
+  ## Allows or'ing two md_render_flags.
+  result = md_render_flags(int(a) or int(b))

@@ -9,7 +9,7 @@ This is [a link](http://www.google.es).
 when isMainModule:
   echo "Micro testing midnight dynamite."
   var
-    md_r = init_md_renderer()
+    md_r = init_md_renderer(md_render_use_xhtml or md_render_safelink)
     md_doc = md_r.document()
     md_buffer = init_md_buffer()
 
