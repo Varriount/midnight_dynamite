@@ -35,11 +35,14 @@ export hoedown_html_smartypants
 #export hoedown_version
 
 type
-  md_renderer* = object
+  md_renderer* = object ## Wraps a raw C hoedown_renderer type.
     h: ptr hoedown_renderer
 
-  md_document* = object
+  md_document* = object ## Wraps a raw hoedown_document type.
     h: ptr hoedown_document
+
+  md_buffer* = object ## Wraps a raw hoedown_buffer type.
+    h: ptr hoedown_buffer
 
 
 proc init*(r: var md_renderer; render_flags, nesting_level = 0) =
@@ -68,7 +71,8 @@ proc free*(r: var md_renderer) =
   r.h.hoedown_html_renderer_free
   r.h = nil
 
-proc document*(renderer: md_renderer; a, b: int): md_document =
+proc document*(renderer: md_renderer;
+    extension_flags = 0, max_nesting = 16): md_document =
   ## Generates a document from a renderer configuration.
   ##
   ## On debug builds this will assert if the renderer is not initialised. In
@@ -77,7 +81,8 @@ proc document*(renderer: md_renderer; a, b: int): md_document =
   ## You need to call free() on the document when you have finished or you will
   ## leak memory.
   assert(not renderer.h.is_nil, "Renderer not initialized")
-  result.h = hoedown_document_new(renderer.h, a.cuint, b.csize)
+  result.h = hoedown_document_new(renderer.h,
+    extension_flags.cuint, max_nesting.csize)
 
 
 proc free*(r: var md_document) =
@@ -90,4 +95,28 @@ proc free*(r: var md_document) =
   r.h = nil
 
 
+proc init*(r: var md_buffer; unit = 16) =
+  ## Inits the md_buffer.
+  ##
+  ## On debug builds this will assert if the buffer is already initialised.
+  ## In release builds the behaviour is unknown.
+  ##
+  ## You need to call free() on the md_buffer when you have finished or you
+  ## will leak memory.
+  assert r.h.is_nil, "Double initialization attempt"
+  r.h = hoedown_buffer_new(unit)
 
+
+proc init_md_buffer*(unit = 16): md_buffer =
+  ## Convenience wrapper over *init()*.
+  result.init(unit)
+
+
+proc free*(r: var md_buffer) =
+  ## Frees resources allocated by this buffer.
+  ##
+  ## You are required to call this or you will leak memory. If you are not
+  ## sure, you can call this many times over and it won't hurt.
+  if r.h.is_nil: return
+  r.h.hoedown_buffer_free
+  r.h = nil

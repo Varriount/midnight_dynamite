@@ -10,7 +10,8 @@ when isMainModule:
   echo "Micro testing midnight dynamite."
   var
     md_r = init_md_renderer()
-    md_doc = md_r.document(0, 16)
+    md_doc = md_r.document()
+    md_html = init_md_buffer()
   var
     r = hoedown_html_renderer_new(0, 0)
     doc = hoedown_document_new(r, 0, 16)
@@ -23,6 +24,7 @@ when isMainModule:
   doc.hoedown_document_free
   r.hoedown_html_renderer_free
 
+  md_html.free
   md_doc.free
   md_r.free
 
