@@ -152,7 +152,8 @@ proc convert_document_header() =
   ## Generates a hoedown.nim file from the preprocessed document.h header.
   ##
   ## After generation prepends prefix_nim and appends postfix_nim to the output
-  ## nimrod source.
+  ## nimrod source. Also appends a list of compile pragmas with the .c files
+  ## from lib_dir.
   let
     src = header_dir/"html.h"
     dest = header_dir/"html2.h"
@@ -162,9 +163,17 @@ proc convert_document_header() =
   ret = exec_shell_cmd("c2nim -o:" & nim & " " & dest)
   if ret != 0: quit("Could not run c2nim on " & dest)
 
+  # Detect .c files to add compilation pragmas.
+  var pragmas = ""
+  for kind, path in lib_dir.walk_dir:
+    let (dir, name, ext) = path.split_file
+    if ext != ".c":
+      continue
+    pragmas.add("{.compile: \"" & name & ext & "\".}\n")
+
   # Mangle output file.
   let buf = nim.read_file
-  nim.write_file(prefix_nim & "\n" & buf & "\n" & postfix_nim)
+  nim.write_file(prefix_nim & "\n" & buf & "\n" & postfix_nim & "\n" & pragmas)
 
 
 proc main() =
