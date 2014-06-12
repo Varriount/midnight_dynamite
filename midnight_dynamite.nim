@@ -45,6 +45,7 @@ type
     h: ptr hoedown_buffer
 
   md_render_flags* = distinct int ## Valid type for md_renderer construction.
+  md_doc_flags* = distinct int ## Valid type for document extensions.
 
 const
   md_render_default* = md_render_flags(0)
@@ -54,6 +55,20 @@ const
   md_render_safelink* = md_render_flags(HOEDOWN_HTML_SAFELINK)
   md_render_hard_wrap* = md_render_flags(HOEDOWN_HTML_HARD_WRAP)
   md_render_use_xhtml* = md_render_flags(HOEDOWN_HTML_USE_XHTML)
+  md_ext_tables* = md_doc_flags(HOEDOWN_EXT_TABLES)
+  md_ext_fenced_code* = md_doc_flags(HOEDOWN_EXT_FENCED_CODE)
+  md_ext_footnotes* = md_doc_flags(HOEDOWN_EXT_FOOTNOTES)
+  md_ext_autolink* = md_doc_flags(HOEDOWN_EXT_AUTOLINK)
+  md_ext_strikethrough* = md_doc_flags(HOEDOWN_EXT_STRIKETHROUGH)
+  md_ext_underline* = md_doc_flags(HOEDOWN_EXT_UNDERLINE)
+  md_ext_highlight* = md_doc_flags(HOEDOWN_EXT_HIGHLIGHT)
+  md_ext_quote* = md_doc_flags(HOEDOWN_EXT_QUOTE)
+  md_ext_superscript* = md_doc_flags(HOEDOWN_EXT_SUPERSCRIPT)
+  md_ext_lax_spacing* = md_doc_flags(HOEDOWN_EXT_LAX_SPACING)
+  md_ext_no_intra_emphasis* = md_doc_flags(HOEDOWN_EXT_NO_INTRA_EMPHASIS)
+  md_ext_space_headers* = md_doc_flags(HOEDOWN_EXT_SPACE_HEADERS)
+  md_ext_disable_indented_code* =
+    md_doc_flags(HOEDOWN_EXT_DISABLE_INDENTED_CODE)
 
 
 proc init*(r: var md_renderer;
@@ -84,8 +99,9 @@ proc free*(r: var md_renderer) =
   r.h.hoedown_html_renderer_free
   r.h = nil
 
+
 proc document*(renderer: md_renderer;
-    extension_flags = 0, max_nesting = 16): md_document =
+    extension_flags = md_doc_flags(0), max_nesting = 16): md_document =
   ## Generates a document from a renderer configuration.
   ##
   ## On debug builds this will assert if the renderer is not initialised. In
@@ -174,3 +190,8 @@ proc reset*(buffer: md_buffer) =
 proc `or`*(a, b: md_render_flags): md_render_flags =
   ## Allows or'ing two md_render_flags.
   result = md_render_flags(int(a) or int(b))
+
+
+proc `or`*(a, b: md_doc_flags): md_doc_flags =
+  ## Allows or'ing two md_doc_flags.
+  result = md_doc_flags(int(a) or int(b))
