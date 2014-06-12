@@ -33,7 +33,3 @@ export hoedown_html_smartypants
 #export hoedown_stack_pop
 #export hoedown_stack_top
 #export hoedown_version
-
-when isMainModule:
-  echo "Micro testing midnight dynamite."
-  echo "Done."
