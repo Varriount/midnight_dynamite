@@ -44,36 +44,41 @@ type
   md_buffer* = object ## Wraps a raw hoedown_buffer type.
     h: ptr hoedown_buffer
 
-  md_render_flags* = distinct int ## Valid type for md_renderer construction.
-  md_doc_flags* = distinct int ## Valid type for document extensions.
-
   md_params* = object ## Convenience bundling of the individual types.
     renderer*: md_renderer
     document*: md_document
     buffer*: md_buffer
 
+  md_render_flag* = enum ## Available flags for creation of renderers.
+    md_render_skip_html = HOEDOWN_HTML_SKIP_HTML,
+    md_render_html_escape = HOEDOWN_HTML_ESCAPE,
+    md_render_expand_tabs = HOEDOWN_HTML_EXPAND_TABS,
+    md_render_safelink = HOEDOWN_HTML_SAFELINK,
+    md_render_hard_wrap = HOEDOWN_HTML_HARD_WRAP,
+    md_render_use_xhtml = HOEDOWN_HTML_USE_XHTML
+
+  md_render_flags* = set[md_render_flag] ## Set of renderer flags.
+
+  md_ext_flag* = enum ## Available flags for document extensions.
+    md_ext_tables = HOEDOWN_EXT_TABLES,
+    md_ext_fenced_code = HOEDOWN_EXT_FENCED_CODE,
+    md_ext_footnotes = HOEDOWN_EXT_FOOTNOTES,
+    md_ext_autolink = HOEDOWN_EXT_AUTOLINK,
+    md_ext_strikethrough = HOEDOWN_EXT_STRIKETHROUGH,
+    md_ext_underline = HOEDOWN_EXT_UNDERLINE,
+    md_ext_highlight = HOEDOWN_EXT_HIGHLIGHT,
+    md_ext_quote = HOEDOWN_EXT_QUOTE,
+    md_ext_superscript = HOEDOWN_EXT_SUPERSCRIPT,
+    md_ext_lax_spacing = HOEDOWN_EXT_LAX_SPACING,
+    md_ext_no_intra_emphasis = HOEDOWN_EXT_NO_INTRA_EMPHASIS,
+    md_ext_space_headers = HOEDOWN_EXT_SPACE_HEADERS,
+    md_ext_disable_indented_code = HOEDOWN_EXT_DISABLE_INDENTED_CODE
+
+  md_ext_flags* = set[md_ext_flag] ## Set of extension flags.
+
 const
-  md_render_default* = md_render_flags(0)
-  md_render_skip_html* = md_render_flags(HOEDOWN_HTML_SKIP_HTML)
-  md_render_html_escape* = md_render_flags(HOEDOWN_HTML_ESCAPE)
-  md_render_expand_tabs* = md_render_flags(HOEDOWN_HTML_EXPAND_TABS)
-  md_render_safelink* = md_render_flags(HOEDOWN_HTML_SAFELINK)
-  md_render_hard_wrap* = md_render_flags(HOEDOWN_HTML_HARD_WRAP)
-  md_render_use_xhtml* = md_render_flags(HOEDOWN_HTML_USE_XHTML)
-  md_ext_tables* = md_doc_flags(HOEDOWN_EXT_TABLES)
-  md_ext_fenced_code* = md_doc_flags(HOEDOWN_EXT_FENCED_CODE)
-  md_ext_footnotes* = md_doc_flags(HOEDOWN_EXT_FOOTNOTES)
-  md_ext_autolink* = md_doc_flags(HOEDOWN_EXT_AUTOLINK)
-  md_ext_strikethrough* = md_doc_flags(HOEDOWN_EXT_STRIKETHROUGH)
-  md_ext_underline* = md_doc_flags(HOEDOWN_EXT_UNDERLINE)
-  md_ext_highlight* = md_doc_flags(HOEDOWN_EXT_HIGHLIGHT)
-  md_ext_quote* = md_doc_flags(HOEDOWN_EXT_QUOTE)
-  md_ext_superscript* = md_doc_flags(HOEDOWN_EXT_SUPERSCRIPT)
-  md_ext_lax_spacing* = md_doc_flags(HOEDOWN_EXT_LAX_SPACING)
-  md_ext_no_intra_emphasis* = md_doc_flags(HOEDOWN_EXT_NO_INTRA_EMPHASIS)
-  md_ext_space_headers* = md_doc_flags(HOEDOWN_EXT_SPACE_HEADERS)
-  md_ext_disable_indented_code* =
-    md_doc_flags(HOEDOWN_EXT_DISABLE_INDENTED_CODE)
+  md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
+  md_ext_default = set[md_ext_flag]({}) ## Default empty extension flags.
 
 
 proc init*(r: var md_renderer;
@@ -86,7 +91,7 @@ proc init*(r: var md_renderer;
   ## You need to call free() on the md_renderer when you have finished or you
   ## will leak memory.
   assert r.h.is_nil, "Double initialization attempt"
-  r.h = hoedown_html_renderer_new(render_flags.cuint, nesting_level.cint)
+  r.h = hoedown_html_renderer_new(cast[cuint](render_flags), nesting_level.cint)
 
 
 proc init_md_renderer*(render_flags = md_render_default,
@@ -106,7 +111,7 @@ proc free*(r: var md_renderer) =
 
 
 proc document*(renderer: md_renderer;
-    extension_flags = md_doc_flags(0), max_nesting = 16): md_document =
+    extension_flags = md_ext_default; max_nesting = 16): md_document =
   ## Generates a document from a renderer configuration.
   ##
   ## On debug builds this will assert if the renderer is not initialised. In
@@ -116,7 +121,7 @@ proc document*(renderer: md_renderer;
   ## leak memory.
   assert(not renderer.h.is_nil, "Renderer not initialized")
   result.h = hoedown_document_new(renderer.h,
-    extension_flags.cuint, max_nesting.csize)
+    cast[cuint](extension_flags), max_nesting.csize)
 
 
 proc free*(r: var md_document) =
@@ -192,19 +197,9 @@ proc reset*(buffer: md_buffer) =
   buffer.h.hoedown_buffer_reset
 
 
-proc `or`*(a, b: md_render_flags): md_render_flags =
-  ## Allows or'ing two md_render_flags.
-  result = md_render_flags(int(a) or int(b))
-
-
-proc `or`*(a, b: md_doc_flags): md_doc_flags =
-  ## Allows or'ing two md_doc_flags.
-  result = md_doc_flags(int(a) or int(b))
-
-
 proc init*(p: var md_params;
     render_flags = md_render_default; render_nesting_level = 0;
-    extension_flags = md_doc_flags(0); document_max_nesting = 16;
+    extension_flags = md_ext_default; document_max_nesting = 16;
     buffer_unit = 16) =
   ## Inits the md_params.
   ##
@@ -221,7 +216,7 @@ proc init*(p: var md_params;
 
 proc init_md_params*(
     render_flags = md_render_default; render_nesting_level = 0;
-    extension_flags = md_doc_flags(0); document_max_nesting = 16;
+    extension_flags = md_ext_default; document_max_nesting = 16;
     buffer_unit = 16): md_params =
   ## Convenience wrapper over *init()*.
   result.init(render_flags, render_nesting_level,

@@ -8,9 +8,12 @@ This is [a link](http://www.google.es).
 
 when isMainModule:
   echo "Micro testing midnight dynamite."
+  const
+    render_flags = {md_render_use_xhtml, md_render_safelink}
+    extension_flags = {md_ext_underline, md_ext_space_headers}
   var
-    md_r = init_md_renderer(md_render_use_xhtml or md_render_safelink)
-    md_doc = md_r.document(md_ext_underline or md_ext_space_headers)
+    md_r = init_md_renderer(render_flags)
+    md_doc = md_r.document(extension_flags)
     md_buffer = init_md_buffer()
 
   md_doc.render(md_buffer, input_md)
@@ -24,7 +27,8 @@ when isMainModule:
 
   # Repeat using the convenience proc.
   var
-    md_params = init_md_params()
+    md_params = init_md_params(render_flags = render_flags,
+      extension_flags = extension_flags)
 
   let high_level_buffer = md_params.render(input_md)
 
