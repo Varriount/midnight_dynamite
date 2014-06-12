@@ -80,6 +80,21 @@ const
   md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
   md_ext_default = set[md_ext_flag]({}) ## Default empty extension flags.
 
+  version_str* = "0.1.0" ## Version as a string. \
+  ## The format is ``digit(.digit)*``.
+
+  version_int* = (major: 0, minor: 1, maintenance: 0) ## \
+  ## Version as an integer tuple.
+  ##
+  ## Major version changes mean significant new features or a break in
+  ## backwards compatibility.
+  ##
+  ## Minor version changes can add switches. Minor
+  ## odd versions are development/git/unstable versions. Minor even versions
+  ## are public stable releases.
+  ##
+  ## Maintenance version changes usually mean bugfixes.
+
 
 proc init*(r: var md_renderer;
     render_flags = md_render_default; nesting_level = 0) =
