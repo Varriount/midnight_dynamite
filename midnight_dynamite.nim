@@ -45,9 +45,12 @@ type
 proc init*(r: var md_renderer; render_flags, nesting_level = 0) =
   ## Inits the md_renderer.
   ##
-  ## On debug builds this will asserts if the renderer is already initialised.
+  ## On debug builds this will assert if the renderer is already initialised.
   ## In release builds the behaviour is unknown.
-  assert r.h.is_nil, "Double initialization attempt!"
+  ##
+  ## You need to call free() on the md_renderer when you have finished or you
+  ## will leak memory.
+  assert r.h.is_nil, "Double initialization attempt"
   r.h = hoedown_html_renderer_new(render_flags.cuint, nesting_level.cint)
 
 
@@ -64,3 +67,27 @@ proc free*(r: var md_renderer) =
   if r.h.is_nil: return
   r.h.hoedown_html_renderer_free
   r.h = nil
+
+proc document*(renderer: md_renderer; a, b: int): md_document =
+  ## Generates a document from a renderer configuration.
+  ##
+  ## On debug builds this will assert if the renderer is not initialised. In
+  ## release builds the behaviour is likely a crash.
+  ##
+  ## You need to call free() on the document when you have finished or you will
+  ## leak memory.
+  assert(not renderer.h.is_nil, "Renderer not initialized")
+  result.h = hoedown_document_new(renderer.h, a.cuint, b.csize)
+
+
+proc free*(r: var md_document) =
+  ## Frees resources allocated by this document.
+  ##
+  ## You are required to call this or you will leak memory. If you are not
+  ## sure, you can call this many times over and it won't hurt.
+  if r.h.is_nil: return
+  r.h.hoedown_document_free
+  r.h = nil
+
+
+
