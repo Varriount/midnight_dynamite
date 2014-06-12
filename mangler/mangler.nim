@@ -10,7 +10,7 @@ var G: Global
 
 const
   header_dir = "mangled_headers" ## Where the mangled headers will be placed.
-  lib_dir = "midnight_dynamite" ## Where the original source will be copied.
+  lib_dir = "wrapper" ## Where the original source will be copied.
   exclude_re = ["#include.*[>]", "#define.*__attribute__.*[)]",
     "__attribute__.*[)]"] ## \
     ## Regular expressions that will clean up strange artifacts.

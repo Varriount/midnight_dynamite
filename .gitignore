@@ -5,10 +5,11 @@
 .DS_Store
 mangled_headers/
 nimcache/
+wrapper/
 
 # Full paths.
 /README.html
 /license.html
-/mangler
+/mangler/mangler
 /midnight_dynamite/hoedown
 /nakefile
