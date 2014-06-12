@@ -3,11 +3,12 @@
 *.o
 *.swp
 .DS_Store
+mangled_headers/
 nimcache/
 
 # Full paths.
 /README.html
 /license.html
-/mangled_headers/
 /mangler
+/midnight_dynamite/hoedown
 /nakefile
