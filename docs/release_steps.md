@@ -37,5 +37,6 @@ Release steps for
   commit changes.
 * ``git push origin master stable gh-pages --tags``.
 * Close the dummy release issue.
-* Announce at [http://forum.nimrod-lang.org/](http://forum.nimrod-lang.org/).
+* Announce at
+  [http://forum.nimrod-lang.org/t/469](http://forum.nimrod-lang.org/t/469).
 * Close the milestone on github.
