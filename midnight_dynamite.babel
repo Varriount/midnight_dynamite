@@ -1,6 +1,6 @@
 [Package]
 name         = "midnight_dynamite"
-version      = "0.1.1"
+version      = "0.2.0"
 author       = "Grzegorz Adam Hankiewicz"
 description  = "Wrapper for the markdown rendering hoedown library."
 license      = "MIT"
