@@ -1,4 +1,5 @@
-import midnight_dynamite_pkg/hoedown, os
+import midnight_dynamite_pkg/hoedown, os, strtabs, streams, parsecfg, times,
+  strutils
 
 # Symbol list extracted from original hoedown.def.
 export hoedown_autolink_is_safe
@@ -47,7 +48,11 @@ type
   md_params* = object ## Convenience bundling of the individual types.
     renderer: md_renderer ## Not public because we hack it for customization.
     document*: md_document
-    buffer*: md_buffer
+    buffer*: md_buffer ## Stores the rendered HTML so far.
+    html_config*: Pstring_table ## HTML decoration configuration. \
+    ## The format of the configuration should be the same as the one returned
+    ## by package/docutils/rstgen.defaultConfig(). However, only the
+    ## ``doc.file`` attribute will be used to wrap the output in `full_html()`.
 
   md_render_flag* = enum ## Available flags for creation of renderers.
     md_render_skip_html = HOEDOWN_HTML_SKIP_HTML,
@@ -94,6 +99,41 @@ const
   ## are public stable releases.
   ##
   ## Maintenance version changes usually mean bugfixes.
+
+  default_html_config_str = slurp("nimdoc.cfg") ## \
+  ## Reads the default html configuration for output headers.
+  html_config_key = "doc.file" ## Value used for HTML decoration.
+
+
+var
+  default_html_config: Pstring_table ## default_html_config_str parsed.
+
+
+proc load_html_config(mem_string: string): Pstring_table =
+  ## Parses the configuration and retuns it as a Pstring_table.
+  ##
+  ## If something goes wrong, will likely raise an exception. Otherwise it
+  ## always return a valid object.
+  result = newStringTable(modeStyleInsensitive)
+  var f = newStringStream(mem_string)
+  if f.isNil: raise newException(EInvalidValue, "cannot stream string")
+
+  var p: TCfgParser
+  open(p, f, "static slurped config")
+  while true:
+    var e = next(p)
+    case e.kind
+    of cfgEof:
+      break
+    of cfgSectionStart:   ## a ``[section]`` has been parsed
+      discard
+    of cfgKeyValuePair:
+      result[e.key] = e.value
+    of cfgOption:
+      quit("command: " & e.key & ": " & e.value)
+    of cfgError:
+      quit(e.msg)
+  close(p)
 
 
 proc init*(r: var md_renderer;
@@ -215,7 +255,7 @@ proc reset*(buffer: md_buffer) =
 proc init*(p: var md_params;
     render_flags = md_render_default; render_nesting_level = 0;
     extension_flags = md_ext_default; document_max_nesting = 16;
-    buffer_unit = 16) =
+    buffer_unit = 16; html_config = Pstring_table(nil)) =
   ## Inits the md_params.
   ##
   ## On debug builds this will assert if the params are already initialised.
@@ -227,15 +267,16 @@ proc init*(p: var md_params;
   p.renderer.init(render_flags, render_nesting_level)
   p.document = p.renderer.document(extension_flags, document_max_nesting)
   p.buffer.init(buffer_unit)
+  p.html_config = html_config
 
 
 proc init_md_params*(
     render_flags = md_render_default; render_nesting_level = 0;
     extension_flags = md_ext_default; document_max_nesting = 16;
-    buffer_unit = 16): md_params =
+    buffer_unit = 16, html_config = Pstring_table(nil)): md_params =
   ## Convenience wrapper over *init()*.
   result.init(render_flags, render_nesting_level,
-    extension_flags, document_max_nesting, buffer_unit)
+    extension_flags, document_max_nesting, buffer_unit, html_config)
 
 
 proc free*(p: var md_params) =
@@ -275,6 +316,30 @@ proc `$`*(p: md_params): string =
   result = $p.buffer
 
 
+proc full_html*(p: md_params): string =
+  ## Similar to `$` but returns the full HTML instead of an embeddable part.
+  ##
+  ## The *decoration* is extracted from the `p.html_config` field, ``doc.file``
+  ## value. If `p.html_config` is nil, a default will be provided extracted
+  ## from Nimrod's rst generator.
+  ##
+  ## If the `html_config` field does not contain a ``doc.file`` value an
+  ## assertion will be raised in debug builds, and you will likely crash on
+  ## release builds.
+  let content = $p
+  var config = p.html_config
+  if config.is_nil:
+    # Load the default configuration, parsing it if necessary.
+    if default_html_config.is_nil:
+      default_html_config = default_html_config_str.load_html_config
+    config = default_html_config
+  assert(not config.is_nil, "Bad HTML rendering configuration")
+  assert config.has_key(html_config_key), "Invalid html configuration"
+  let decoration = config[html_config_key]
+  result = decoration % ["title", "", "content", content,
+    "date", getDateStr(), "time", getClockStr()]
+
+
 proc render*(p: var md_params; md_text: string): string =
   ## Convenience proc which resets the buffer, renders it, and returns it.
   p.reset
@@ -293,4 +358,6 @@ proc render_file*(p: var md_params; input_filename: string,
   var dest = output_filename
   if dest.len < 1:
     dest = input_filename.change_file_ext("html")
-  dest.write_file(p.render(input_filename.read_file))
+  p.reset
+  p.add(input_filename.read_file)
+  dest.write_file(p.full_html)

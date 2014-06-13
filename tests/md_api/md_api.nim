@@ -53,6 +53,7 @@ proc test_files() =
   finally: md_params.free
 
   md_params.render_file(copied)
+  md_params.render_file(copied)
   md_params.render_file(copied, specific)
 
 
