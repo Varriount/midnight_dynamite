@@ -1,0 +1,31 @@
+[Package]
+name         = "midnight_dynamite"
+version      = "0.1.1"
+author       = "Grzegorz Adam Hankiewicz"
+description  = "Wrapper for the markdown rendering hoedown library."
+license      = "MIT"
+
+InstallFiles = """
+
+README.md
+midnight_dynamite.nim
+midnight_dynamite_pkg/autolink.c
+midnight_dynamite_pkg/autolink.h
+midnight_dynamite_pkg/buffer.c
+midnight_dynamite_pkg/buffer.h
+midnight_dynamite_pkg/document.c
+midnight_dynamite_pkg/document.h
+midnight_dynamite_pkg/escape.c
+midnight_dynamite_pkg/escape.h
+midnight_dynamite_pkg/hoedown.nim
+midnight_dynamite_pkg/html.c
+midnight_dynamite_pkg/html.h
+midnight_dynamite_pkg/html_blocks.c
+midnight_dynamite_pkg/html_smartypants.c
+midnight_dynamite_pkg/stack.c
+midnight_dynamite_pkg/stack.h
+midnight_dynamite_pkg/version.c
+midnight_dynamite_pkg/version.h
+nimdoc.cfg
+
+"""
