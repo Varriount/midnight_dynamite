@@ -1,6 +1,18 @@
 import midnight_dynamite_pkg/hoedown, os, strtabs, streams, parsecfg, times,
   strutils
 
+## `midnight_dynamite <https://github.com/gradha/midnight_dynamite>`_ is a
+## wrapper of the markdown rendering `hoedown library
+## <https://github.com/hoedown/hoedown>`_.
+##
+## This module provides a more Nimrodic interface to the `low level interface
+## <midnight_dynamite_pkg/hoedown.html>`_. Usually you will create an
+## `md_params object <#md_params>`_ with the `init_md_params proc
+## <#init_md_params>`_. You can then call on the ``md_params`` object
+## convenience procs like `full_html <#full_html>`_ to render a whole HTML file
+## to memory or `render_file <#render_file>`_ to deal with files.
+
+
 # Symbol list extracted from original hoedown.def.
 export hoedown_autolink_is_safe
 export hoedown_autolink_c_www
@@ -36,7 +48,7 @@ export hoedown_stack_top
 export hoedown_version
 
 type
-  md_renderer* = object ## Wraps a raw C hoedown_renderer type.
+  md_renderer* = object ## Wraps a raw hoedown_renderer type.
     h: ptr hoedown_renderer
 
   md_document* = object ## Wraps a raw hoedown_document type.
@@ -45,7 +57,9 @@ type
   md_buffer* = object ## Wraps a raw hoedown_buffer type.
     h: ptr hoedown_buffer
 
-  md_params* = object ## Convenience bundling of the individual types.
+  md_params* = object ## Convenience bundling of the individual raw types. \
+    ## In general the only public field you might want to change yourself is
+    ## ``html_config``, but you can do that through the init methods anyway.
     renderer: md_renderer ## Not public because we hack it for customization.
     document*: md_document
     buffer*: md_buffer ## Stores the rendered HTML so far.
@@ -143,15 +157,15 @@ proc init*(r: var md_renderer;
   ## On debug builds this will assert if the renderer is already initialised.
   ## In release builds the behaviour is unknown.
   ##
-  ## You need to call free() on the md_renderer when you have finished or you
-  ## will leak memory.
+  ## You need to call `free() <#free,md_renderer>`_ on the md_renderer when you
+  ## have finished or you will leak memory.
   assert r.h.is_nil, "Double initialization attempt"
   r.h = hoedown_html_renderer_new(cast[cuint](render_flags), nesting_level.cint)
 
 
 proc init_md_renderer*(render_flags = md_render_default,
     nesting_level = 0): md_renderer =
-  ## Convenience wrapper over *init()*.
+  ## Convenience wrapper over `init() <#init,md_renderer>`_
   result.init(render_flags, nesting_level)
 
 
@@ -172,8 +186,8 @@ proc document*(renderer: md_renderer;
   ## On debug builds this will assert if the renderer is not initialised. In
   ## release builds the behaviour is likely a crash.
   ##
-  ## You need to call free() on the document when you have finished or you will
-  ## leak memory.
+  ## You need to call `free() <#free,md_document>`_ on the document when you
+  ## have finished or you will leak memory.
   assert(not renderer.h.is_nil, "Renderer not initialized")
   result.h = hoedown_document_new(renderer.h,
     cast[cuint](extension_flags), max_nesting.csize)
@@ -195,14 +209,14 @@ proc init*(r: var md_buffer; unit = 16) =
   ## On debug builds this will assert if the buffer is already initialised.
   ## In release builds the behaviour is unknown.
   ##
-  ## You need to call free() on the md_buffer when you have finished or you
-  ## will leak memory.
+  ## You need to call `free() <#free,md_buffer>`_ on the md_buffer when you
+  ## have finished or you will leak memory.
   assert r.h.is_nil, "Double initialization attempt"
   r.h = hoedown_buffer_new(unit)
 
 
 proc init_md_buffer*(unit = 16): md_buffer =
-  ## Convenience wrapper over *init()*.
+  ## Convenience wrapper over `init() <#init,md_buffer>`_.
   result.init(unit)
 
 
@@ -220,7 +234,7 @@ proc render*(document: md_document; buffer: md_buffer; md_text: string) =
   ## Renders the `document` into the `buffer`.
   ##
   ## If `buffer` already contains text, it will be preserved. Call
-  ## `buffer.reset()` if you want to clean it previously.
+  ## `buffer.reset() <#reset,md_buffer>`_ if you want to clean it previously.
   ##
   ## If `md_text` is nil, or `document` or `buffer` have not been initialized,
   ## this proc will assert in debug builds and will likely crash in release
@@ -256,13 +270,20 @@ proc init*(p: var md_params;
     render_flags = md_render_default; render_nesting_level = 0;
     extension_flags = md_ext_default; document_max_nesting = 16;
     buffer_unit = 16; html_config = Pstring_table(nil)) =
-  ## Inits the md_params.
+  ## Inits the parameter structure.
   ##
   ## On debug builds this will assert if the params are already initialised.
   ## In release builds the behaviour is unknown.
   ##
-  ## You need to call free() on the md_params when you have finished or you
-  ## will leak memory.
+  ## You need to call `free() <#free,md_params>`_ on the initialised params
+  ## when you have finished or you will leak memory.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params: md_params
+  ##   params.init
+  ##   finally: params.free
   assert p.renderer.h.is_nil, "Double initialization attempt"
   p.renderer.init(render_flags, render_nesting_level)
   p.document = p.renderer.document(extension_flags, document_max_nesting)
@@ -274,7 +295,13 @@ proc init_md_params*(
     render_flags = md_render_default; render_nesting_level = 0;
     extension_flags = md_ext_default; document_max_nesting = 16;
     buffer_unit = 16, html_config = Pstring_table(nil)): md_params =
-  ## Convenience wrapper over *init()*.
+  ## Convenience wrapper over `init() <#init,md_params>`_.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   finally: params.free
   result.init(render_flags, render_nesting_level,
     extension_flags, document_max_nesting, buffer_unit, html_config)
 
@@ -301,10 +328,26 @@ proc reset*(p: var md_params) =
 proc add*(p: var md_params; md_text: string) =
   ## Adds the `md_text` to the markdown rendered buffer.
   ##
-  ## Call `p.reset()` if you want to clean the stored text previously.
+  ## Call `p.reset() <#reset,md_params>`_ if you want to clean the stored text
+  ## previously.
   ##
   ## If the params have not been initialized, this proc will assert in debug
   ## builds and will likely crash in release
+  ##
+  ## Note that each string will be added as an independant block, if you need
+  ## to render a whole markdown element you should not split it.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   params.add "Oppa"
+  ##   params.add "*Gangnam style*"
+  ##   echo($params)
+  ##   # <p>Oppa</p>
+  ##   #
+  ##   # <p><em>Gangnam style</em></p>
+  ##   #
   p.document.render(p.buffer, md_text)
 
 
@@ -313,11 +356,20 @@ proc `$`*(p: md_params): string =
   ##
   ## This proc will assert in debug builds if the buffer has not been
   ## initialised. In release builds it will likely crash.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   params.add "Hey *sexy lady*"
+  ##   echo($params)
+  ##   # <p>Hey <em>sexy lady</em></p>
   result = $p.buffer
 
 
 proc full_html*(p: md_params): string =
-  ## Similar to `$` but returns the full HTML instead of an embeddable part.
+  ## Similar to `$ <#$,md_params>`_ but returns the full HTML instead of an
+  ## embeddable part.
   ##
   ## The *decoration* is extracted from the `p.html_config` field, ``doc.file``
   ## value. If `p.html_config` is nil, a default will be provided extracted
@@ -326,6 +378,13 @@ proc full_html*(p: md_params): string =
   ## If the `html_config` field does not contain a ``doc.file`` value an
   ## assertion will be raised in debug builds, and you will likely crash on
   ## release builds.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   params.add "Hey *sexy lady*"
+  ##   echo params.full_html
   let content = $p
   var config = p.html_config
   if config.is_nil:
@@ -342,6 +401,13 @@ proc full_html*(p: md_params): string =
 
 proc render*(p: var md_params; md_text: string): string =
   ## Convenience proc which resets the buffer, renders it, and returns it.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   echo params.render("Hey *sexy lady*")
+  ##   # <p>Hey <em>sexy lady</em></p>
   p.reset
   p.add(md_text)
   result = $p
@@ -353,6 +419,13 @@ proc render_file*(p: var md_params; input_filename: string,
   ##
   ## If `output_filename` is the empty string, the output filename will be
   ## `input_filename` with the extension changed to ``.html``.
+  ##
+  ## Usage example:
+  ##
+  ## .. code-block:: nimrod
+  ##   var params = init_md_params()
+  ##   params.render_file("README.md")
+  ##   # Generates README.html file
   assert(not input_filename.is_nil, "Input filename can't be nil")
   assert(not output_filename.is_nil, "Output filename can't be nil")
   var dest = output_filename
