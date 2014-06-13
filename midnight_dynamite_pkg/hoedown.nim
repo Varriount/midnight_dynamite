@@ -148,7 +148,24 @@ proc hoedown_html_toc_renderer_new*(nesting_level: cint): ptr hoedown_renderer
 proc hoedown_html_renderer_free*(renderer: ptr hoedown_renderer)
 proc hoedown_html_smartypants*(ob: ptr hoedown_buffer; text: ptr uint8;
                                size: csize)
-const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
+proc hoedown_escape_html*(ob: ptr hoedown_buffer; src: ptr uint8; size: csize;
+                          secure: cint)
+proc hoedown_escape_href*(ob: ptr hoedown_buffer; src: ptr uint8; size: csize)
+type
+  hoedown_stack* = object
+    item*: ptr pointer
+    size*: csize
+    asize*: csize
+
+
+proc hoedown_stack_new*(a2: ptr hoedown_stack; a3: csize): cint
+proc hoedown_stack_free*(a2: ptr hoedown_stack)
+proc hoedown_stack_grow*(a2: ptr hoedown_stack; a3: csize): cint
+proc hoedown_stack_push*(a2: ptr hoedown_stack; a3: pointer): cint
+proc hoedown_stack_pop*(a2: ptr hoedown_stack): pointer
+proc hoedown_stack_top*(a2: ptr hoedown_stack): pointer
+proc hoedown_version*(major: ptr cint; minor: ptr cint; revision: ptr cint)
+const HOEDOWN_TABLE_ALIGNMASK* = HOEDOWN_TABLE_ALIGN_CENTER
 
 # Force using relative path, see https://github.com/Araq/Nimrod/issues/1262.
 # In the future the directory might have to be removed.

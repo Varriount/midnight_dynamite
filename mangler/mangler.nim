@@ -20,7 +20,7 @@ const
 
   prefix_nim = "{.push importc.}\n" ## String to add before the output nim.
   postfix_nim = """
-const HOEDOWN_TABLE_ALIGNMASK = HOEDOWN_TABLE_ALIGN_CENTER
+const HOEDOWN_TABLE_ALIGNMASK* = HOEDOWN_TABLE_ALIGN_CENTER
 """ ## String to add after the output nim.
 
   manual_includes = """

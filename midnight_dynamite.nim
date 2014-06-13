@@ -19,20 +19,20 @@ export hoedown_buffer_printf
 export hoedown_document_new
 export hoedown_document_render
 export hoedown_document_free
-#export hoedown_escape_html
-#export hoedown_escape_href
+export hoedown_escape_html
+export hoedown_escape_href
 export hoedown_html_is_tag
 export hoedown_html_renderer_new
 export hoedown_html_toc_renderer_new
 export hoedown_html_renderer_free
 export hoedown_html_smartypants
-#export hoedown_stack_free
-#export hoedown_stack_grow
-#export hoedown_stack_new
-#export hoedown_stack_push
-#export hoedown_stack_pop
-#export hoedown_stack_top
-#export hoedown_version
+export hoedown_stack_free
+export hoedown_stack_grow
+export hoedown_stack_new
+export hoedown_stack_push
+export hoedown_stack_pop
+export hoedown_stack_top
+export hoedown_version
 
 type
   md_renderer* = object ## Wraps a raw C hoedown_renderer type.
