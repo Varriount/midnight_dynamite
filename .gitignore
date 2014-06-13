@@ -1,10 +1,21 @@
 # Global patterns
 *.exe
+*.o
 *.swp
 .DS_Store
 nimcache/
+wrapper/
 
 # Full paths.
 /README.html
+/docs/changes.html
+/docs/release_steps.html
 /license.html
+/mangler/modified_headers
+/midnight_dynamite.html
+/midnight_dynamite_pkg/hoedown
+/midnight_dynamite_pkg/hoedown.html
 /nakefile
+/tests/md_api/README.html
+/tests/md_api/README.md
+/tests/md_api/specific.html
