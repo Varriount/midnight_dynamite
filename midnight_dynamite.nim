@@ -1,4 +1,4 @@
-import midnight_dynamite_pkg/hoedown
+import midnight_dynamite_pkg/hoedown, os
 
 # Symbol list extracted from original hoedown.def.
 export hoedown_autolink_is_safe
@@ -45,7 +45,7 @@ type
     h: ptr hoedown_buffer
 
   md_params* = object ## Convenience bundling of the individual types.
-    renderer*: md_renderer
+    renderer: md_renderer ## Not public because we hack it for customization.
     document*: md_document
     buffer*: md_buffer
 
@@ -280,3 +280,17 @@ proc render*(p: var md_params; md_text: string): string =
   p.reset
   p.add(md_text)
   result = $p
+
+
+proc render_file*(p: var md_params; input_filename: string,
+    output_filename = "") =
+  ## Convenience proc which reads `input_filename` and generates an HTML file.
+  ##
+  ## If `output_filename` is the empty string, the output filename will be
+  ## `input_filename` with the extension changed to ``.html``.
+  assert(not input_filename.is_nil, "Input filename can't be nil")
+  assert(not output_filename.is_nil, "Output filename can't be nil")
+  var dest = output_filename
+  if dest.len < 1:
+    dest = input_filename.change_file_ext("html")
+  dest.write_file(p.render(input_filename.read_file))

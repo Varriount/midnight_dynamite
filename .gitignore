@@ -12,3 +12,6 @@ wrapper/
 /mangler/modified_headers
 /midnight_dynamite_pkg/hoedown
 /nakefile
+/tests/md_api/README.html
+/tests/md_api/README.md
+/tests/md_api/specific.html
