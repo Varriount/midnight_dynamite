@@ -19,16 +19,32 @@ License
 Installing the library
 ======================
 
+Stable version
+--------------
+
+Install the [Nimrod compiler](http://nimrod-lang.org/). Then use [Nimrod's
+Babel package manager](https://github.com/nimrod-code/babel) to install:
+
+    $ babel update
+    $ babel install midnight_dynamite
+
+
 Development version
 -------------------
 
 Install the [Nimrod compiler](http://nimrod-lang.org/). Then use [Nimrod's
-babel package manager](https://github.com/nimrod-code/babel) to install locally
+Babel package manager](https://github.com/nimrod-code/babel) to install locally
 the github checkout:
 
     $ git clone --recursive https://github.com/gradha/midnight_dynamite.git
     $ cd midnight_dynamite
-    $ babel install
+    $ babel install -y
+
+If you don't mind downloading the git repo every time you can also use babel to
+install the latest development version:
+
+    $ babel update
+    $ babel install -y midnight_dynamite#head
 
 
 Documentation
@@ -41,7 +57,8 @@ the following commands:
     $ nimrod doc midnight_dynamite.nim
     $ open midnight_dynamite.html
 
-The minimal practical example is:
+If you installed using git, run the ``nimrod doc`` command where you cloned the
+repo. Here is a minimal practical usage example:
 
     import midnight_dynamite
 
