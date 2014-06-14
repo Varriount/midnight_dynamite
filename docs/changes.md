@@ -7,7 +7,8 @@ Changes log for
 v0.2.1, ????-??-??
 ------------------
 
-* Nothing yet.
+* [Added stable babel
+  installation](https://github.com/gradha/midnight_dynamite/issues/3).
 
 v0.2.0, 2014-06-14
 ------------------
