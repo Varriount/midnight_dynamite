@@ -75,7 +75,7 @@ You may also browse the [tests directory](tests) for usage examples.
 Changes
 =======
 
-This is development version 0.2.1. For a list of changes see the
+This is stable version 0.2.2. For a list of changes see the
 [docs/changes.md file](docs/changes.md).
 
 
