@@ -69,35 +69,24 @@ type
     ## ``doc.file`` attribute will be used to wrap the output in `full_html()`.
 
   md_render_flag* = enum ## Available flags for creation of renderers.
-    md_render_skip_html = HOEDOWN_HTML_SKIP_HTML,
-    md_render_html_escape = HOEDOWN_HTML_ESCAPE,
-    md_render_expand_tabs = HOEDOWN_HTML_EXPAND_TABS,
-    md_render_safelink = HOEDOWN_HTML_SAFELINK,
-    md_render_hard_wrap = HOEDOWN_HTML_HARD_WRAP,
-    md_render_use_xhtml = HOEDOWN_HTML_USE_XHTML
+    md_render_skip_html, md_render_html_escape, md_render_expand_tabs,
+    md_render_safelink, md_render_hard_wrap, md_render_use_xhtml,
 
   md_render_flags* = set[md_render_flag] ## Set of renderer flags.
 
   md_ext_flag* = enum ## Available flags for document extensions.
-    md_ext_tables = HOEDOWN_EXT_TABLES,
-    md_ext_fenced_code = HOEDOWN_EXT_FENCED_CODE,
-    md_ext_footnotes = HOEDOWN_EXT_FOOTNOTES,
-    md_ext_autolink = HOEDOWN_EXT_AUTOLINK,
-    md_ext_strikethrough = HOEDOWN_EXT_STRIKETHROUGH,
-    md_ext_underline = HOEDOWN_EXT_UNDERLINE,
-    md_ext_highlight = HOEDOWN_EXT_HIGHLIGHT,
-    md_ext_quote = HOEDOWN_EXT_QUOTE,
-    md_ext_superscript = HOEDOWN_EXT_SUPERSCRIPT,
-    md_ext_lax_spacing = HOEDOWN_EXT_LAX_SPACING,
-    md_ext_no_intra_emphasis = HOEDOWN_EXT_NO_INTRA_EMPHASIS,
-    md_ext_space_headers = HOEDOWN_EXT_SPACE_HEADERS,
-    md_ext_disable_indented_code = HOEDOWN_EXT_DISABLE_INDENTED_CODE
+    md_ext_tables, md_ext_fenced_code, md_ext_footnotes, md_ext_autolink,
+    md_ext_strikethrough, md_ext_underline, md_ext_highlight, md_ext_quote,
+    md_ext_superscript, md_ext_lax_spacing, md_ext_no_intra_emphasis,
+    md_ext_space_headers, md_ext_disable_indented_code,
 
   md_ext_flags* = set[md_ext_flag] ## Set of extension flags.
 
 const
   md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
-  md_ext_default = set[md_ext_flag]({}) ## Default empty extension flags.
+  md_ext_default = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
+    md_ext_lax_spacing, md_ext_no_intra_emphasis,
+    md_ext_strikethrough}) ## Default GitHub syntax friendly extension flags.
 
   version_str* = "0.2.1" ## Version as a string. \
   ## The format is ``digit(.digit)*``.
@@ -160,6 +149,12 @@ proc init*(r: var md_renderer;
   ## You need to call `free() <#free,md_renderer>`_ on the md_renderer when you
   ## have finished or you will leak memory.
   assert r.h.is_nil, "Double initialization attempt"
+  assert((1 shl int(md_render_skip_html)) == int(HOEDOWN_HTML_SKIP_HTML))
+  assert((1 shl int(md_render_html_escape)) == int(HOEDOWN_HTML_ESCAPE))
+  assert((1 shl int(md_render_expand_tabs)) == int(HOEDOWN_HTML_EXPAND_TABS))
+  assert((1 shl int(md_render_safelink)) == int(HOEDOWN_HTML_SAFELINK))
+  assert((1 shl int(md_render_hard_wrap)) == int(HOEDOWN_HTML_HARD_WRAP))
+  assert((1 shl int(md_render_use_xhtml)) == int(HOEDOWN_HTML_USE_XHTML))
   r.h = hoedown_html_renderer_new(cast[cuint](render_flags), nesting_level.cint)
 
 
@@ -189,6 +184,21 @@ proc document*(renderer: md_renderer;
   ## You need to call `free() <#free,md_document>`_ on the document when you
   ## have finished or you will leak memory.
   assert(not renderer.h.is_nil, "Renderer not initialized")
+  assert((1 shl int(md_ext_tables)) == int(HOEDOWN_EXT_TABLES))
+  assert((1 shl int(md_ext_fenced_code)) == int(HOEDOWN_EXT_FENCED_CODE))
+  assert((1 shl int(md_ext_footnotes)) == int(HOEDOWN_EXT_FOOTNOTES))
+  assert((1 shl int(md_ext_autolink)) == int(HOEDOWN_EXT_AUTOLINK))
+  assert((1 shl int(md_ext_strikethrough)) == int(HOEDOWN_EXT_STRIKETHROUGH))
+  assert((1 shl int(md_ext_underline)) == int(HOEDOWN_EXT_UNDERLINE))
+  assert((1 shl int(md_ext_highlight)) == int(HOEDOWN_EXT_HIGHLIGHT))
+  assert((1 shl int(md_ext_quote)) == int(HOEDOWN_EXT_QUOTE))
+  assert((1 shl int(md_ext_superscript)) == int(HOEDOWN_EXT_SUPERSCRIPT))
+  assert((1 shl int(md_ext_lax_spacing)) == int(HOEDOWN_EXT_LAX_SPACING))
+  assert((1 shl int(md_ext_space_headers)) == int(HOEDOWN_EXT_SPACE_HEADERS))
+  assert((1 shl int(md_ext_no_intra_emphasis)) ==
+    int(HOEDOWN_EXT_NO_INTRA_EMPHASIS))
+  assert((1 shl int(md_ext_disable_indented_code)) ==
+    int(HOEDOWN_EXT_DISABLE_INDENTED_CODE))
   result.h = hoedown_document_new(renderer.h,
     cast[cuint](extension_flags), max_nesting.csize)
 
