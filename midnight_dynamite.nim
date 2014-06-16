@@ -88,10 +88,10 @@ const
     md_ext_lax_spacing, md_ext_no_intra_emphasis,
     md_ext_strikethrough}) ## Default GitHub syntax friendly extension flags.
 
-  version_str* = "0.2.2" ## Version as a string. \
+  version_str* = "0.2.3" ## Version as a string. \
   ## The format is ``digit(.digit)*``.
 
-  version_int* = (major: 0, minor: 2, maintenance: 2) ## \
+  version_int* = (major: 0, minor: 2, maintenance: 3) ## \
   ## Version as an integer tuple.
   ##
   ## Major version changes mean significant new features or a break in
