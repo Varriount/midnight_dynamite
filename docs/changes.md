@@ -7,7 +7,8 @@ Changes log for
 v0.2.3, ????-??-??
 ------------------
 
-* Nothing yet.
+* [Enabled fenced blocks
+  extension](https://github.com/gradha/midnight_dynamite/issues/12).
 
 v0.2.2, 2014-06-16
 ------------------
