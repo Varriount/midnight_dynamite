@@ -44,7 +44,7 @@ If you don't mind downloading the git repo every time you can also use babel to
 install the latest development version:
 
     $ babel update
-    $ babel install -y midnight_dynamite#head
+    $ babel install -y midnight_dynamite@#head
 
 
 Documentation
