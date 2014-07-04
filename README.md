@@ -50,6 +50,10 @@ install the latest development version:
 Documentation
 =============
 
+Generated versions of the documentation can be browsed online at
+[http://gradha.github.io/midnight_dynamite/](http://gradha.github.io/midnight_dynamite/).
+You may also browse the [tests directory](tests) for usage examples.
+
 Documentation is provided as docstrings, you can generate it yourself running
 the following commands:
 
@@ -66,10 +70,6 @@ repo. Here is a minimal practical usage example:
       var md_params = init_md_params()
       finally: md_params.free
       md_params.render_file("README.md")
-
-Generated versions of the documentation can be browsed online at
-[http://gradha.github.io/midnight_dynamite/](http://gradha.github.io/midnight_dynamite/).
-You may also browse the [tests directory](tests) for usage examples.
 
 
 Changes
