@@ -9,6 +9,8 @@ v0.2.3, ????-??-??
 
 * [Enabled fenced blocks
   extension](https://github.com/gradha/midnight_dynamite/issues/12).
+* [Updated babel install
+  syntax](https://github.com/gradha/midnight_dynamite/issues/13).
 
 v0.2.2, 2014-06-16
 ------------------
