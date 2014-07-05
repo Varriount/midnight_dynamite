@@ -568,4 +568,96 @@ than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """, md_render_flags({}), md_ext_flags({})), # ---
 
+    ("""
+*single asterisks*
+
+_single underscores_
+
+**double asterisks**
+
+__double underscores__
+
+un*frigging*believable
+
+\*this text is surrounded by literal asterisks\*
+""", """
+<p><em>single asterisks</em></p>
+
+<p><em>single underscores</em></p>
+
+<p><strong>double asterisks</strong></p>
+
+<p><strong>double underscores</strong></p>
+
+<p>un<em>frigging</em>believable</p>
+
+<p>*this text is surrounded by literal asterisks*</p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+Use the `printf()` function.
+
+``There is a literal backtick (`) here.``
+""", """
+<p>Use the <code>printf()</code> function.</p>
+
+<p><code>There is a literal backtick (`) here.</code></p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+A single backtick in a code span: `` ` ``
+
+A backtick-delimited string in a code span: `` `foo` ``
+""", """
+<p>A single backtick in a code span: <code>`</code></p>
+
+<p>A backtick-delimited string in a code span: <code>`foo`</code></p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+Please don't use any `<blink>` tags.
+
+`&#8212;` is the decimal-encoded equivalent of `&mdash;`.
+""", """
+<p>Please don&#39;t use any <code>&lt;blink&gt;</code> tags.</p>
+
+<p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+![Alt text](/path/to/img.jpg)
+
+![Alt text](/path/to/img.jpg "Optional title")
+
+![Alt text][id]
+
+[id]: url/to/image  "Optional title attribute"
+""", """
+<p><img src="/path/to/img.jpg" alt="Alt text"></p>
+
+<p><img src="/path/to/img.jpg" alt="Alt text" title="Optional title"></p>
+
+<p><img src="url/to/image" alt="Alt text" title="Optional title attribute"></p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+http://example.com/
+
+<http://example.com/>
+
+<address@example.com>
+""", """
+<p>http://example.com/</p>
+
+<p><a href="http://example.com/">http://example.com/</a></p>
+
+<p><a href="mailto:address@example.com">address@example.com</a></p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
+    ("""
+\*literal asterisks\*
+""", """
+<p>*literal asterisks*</p>
+""", md_render_flags({}), md_ext_flags({})), # ---
+
     ]
