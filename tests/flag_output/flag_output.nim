@@ -101,5 +101,6 @@ proc run_tests() =
     echo "Failed ", FAIL.len, " tests out of ", tests.len
     for f in FAIL:
       echo "\tTest ", f
+    quit(1)
 
 when isMainModule: run_tests()
