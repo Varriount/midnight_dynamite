@@ -1,40 +1,7 @@
-import midnight_dynamite, os
+import midnight_dynamite, os, test_data
 
-type
-  Test_info = tuple[input, output: string;
-    render_flags: md_render_flags; extension_flags: md_ext_flags]
-
-const
-  test_strings: array[2, Test_info] = [
-    ("meh", "<p>meh</p>\n", md_render_flags({}), md_ext_flags({})),
-
-    ("""
-This is a regular paragraph.
-
-<table>
-    <tr>
-        <td>Foo</td>
-    </tr>
-</table>
-
-This is another regular paragraph.
-""", """
-<p>This is a regular paragraph.</p>
-
-<table>
-    <tr>
-        <td>Foo</td>
-    </tr>
-</table>
-
-<p>This is another regular paragraph.</p>
-""",
-md_render_flags({}), md_ext_flags({})),
-    ]
-
-proc run_test(pair: Test_info): bool =
-  ## Makes sure `pair` produces the expected output.
-
+proc run_test(info: Test_info): bool =
+  ## Makes sure `info` produces the expected output.
   var
     RENDER_FLAGS: md_render_flags = {}
     EXTENSION_FLAGS: md_ext_flags = {}
@@ -47,7 +14,7 @@ proc run_test(pair: Test_info): bool =
     MD_DOC.free
     MD_R.free
 
-  MD_DOC.render(MD_BUFFER, pair.input)
+  MD_DOC.render(MD_BUFFER, info.input)
   let low_level_buffer = $MD_BUFFER
 
   # Repeat using the convenience proc.
@@ -57,13 +24,13 @@ proc run_test(pair: Test_info): bool =
   finally:
     MD_PARAMS.free
 
-  let high_level_buffer = MD_PARAMS.render(pair.input)
+  let high_level_buffer = MD_PARAMS.render(info.input)
 
   if low_level_buffer != high_level_buffer:
     echo "low level '", low_level_buffer, "' != '", high_level_buffer, "'"
     return
-  if low_level_buffer != pair.output:
-    echo "low level '", low_level_buffer, "' != '", pair.output, "'"
+  if low_level_buffer != info.output:
+    echo "low level '", low_level_buffer, "' != '", info.output, "'"
     return
 
   result = true
@@ -75,9 +42,9 @@ proc run_tests() =
     SUCCESS: seq[int] = @[]
     FAIL: seq[int] = @[]
 
-  for f, pair in test_strings.pairs:
+  for f, info in test_strings.pairs:
     try:
-      if pair.run_test:
+      if info.run_test:
         SUCCESS.add(f)
         continue
     except:
@@ -85,7 +52,7 @@ proc run_tests() =
     FAIL.add(f)
 
   if FAIL.len < 1:
-    echo "All md tests passed."
+    echo "All (", test_strings.len, ") md tests passed."
   else:
     echo "Failed ", FAIL.len, " tests out of ", test_strings.len
     for f in FAIL:
