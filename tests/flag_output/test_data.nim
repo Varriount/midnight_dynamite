@@ -4,11 +4,17 @@ type
   Test_info* = tuple[input, output: string;
     render_flags: md_render_flags; extension_flags: md_ext_flags]
 
+
+template ef(a, b: string): Test_info =
+  ## Expands a two string tuple to an *empty flags* tuple.
+  (a, b, md_render_flags({}), md_ext_flags({}))
+
+
 const
   test_strings* = [
-    ("meh", "<p>meh</p>\n", md_render_flags({}), md_ext_flags({})), # ---
+    ef("meh", "<p>meh</p>\n"), # ---
 
-    ("""
+    ef("""
 This is a regular paragraph.
 
 <table>
@@ -28,28 +34,28 @@ This is another regular paragraph.
 </table>
 
 <p>This is another regular paragraph.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
     ("http://images.google.com/images?num=30&q=larry+bird",
       "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n",
       md_render_flags({}), md_ext_flags({})), # ---
 
-    ("""
+    ef("""
 <a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
 """, """
 <p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 <a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
 """, """
 <p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
     ("&copy; AT&T 4 < 5", "<p>&copy; AT&amp;T 4 &lt; 5</p>\n",
       md_render_flags({}), md_ext_flags({})), # ---
 
-    ("""
+    ef("""
 in
 a
 single
@@ -62,9 +68,9 @@ single
 line</p>
 
 <p>second paragraph</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is an H1
 =============
 
@@ -77,10 +83,10 @@ body""", """
 <h2>This is an H2</h2>
 
 <p>body</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
 
-    ("""
+    ef("""
 # This is an H1
 
 ## This is an H2
@@ -95,9 +101,9 @@ body""", """
 <h6>This is an H6</h6>
 
 <p>body</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 # This is an H1 #
 
 ## This is an H2 ##
@@ -112,9 +118,9 @@ body""", """
 <h3>This is an H3</h3>
 
 <p>body</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 > consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
 > Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
@@ -133,9 +139,9 @@ id sem consectetuer libero luctus adipiscing.</p>
 </blockquote>
 
 <p>extra</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
 Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
@@ -154,9 +160,9 @@ id sem consectetuer libero luctus adipiscing.</p>
 </blockquote>
 
 <p>extra</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 > This is the first level of quoting.
 >
 > > This is nested blockquote.
@@ -175,9 +181,9 @@ extra""", """
 </blockquote>
 
 <p>extra</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 > ## This is a header.
 >
 > 1.   This is the first list item.
@@ -202,9 +208,9 @@ extra""", """
 
 <p>extra</p>
 </blockquote>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   Red
 *   Green
 *   Blue
@@ -214,9 +220,9 @@ extra""", """
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 +   Red
 +   Green
 +   Blue
@@ -226,9 +232,9 @@ extra""", """
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 -   Red
 -   Green
 -   Blue
@@ -238,9 +244,9 @@ extra""", """
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 1.  Bird
 2.  McHale
 3.  Parish
@@ -250,9 +256,9 @@ extra""", """
 <li> McHale</li>
 <li> Parish</li>
 </ol>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 1.  Bird
 1.  McHale
 1.  Parish
@@ -262,9 +268,9 @@ extra""", """
 <li> McHale</li>
 <li> Parish</li>
 </ol>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 3.  Bird
 1.  McHale
 8.  Parish
@@ -274,9 +280,9 @@ extra""", """
 <li> McHale</li>
 <li> Parish</li>
 </ol>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
     Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
     viverra nec, fringilla in, laoreet vitae, risus.
@@ -290,9 +296,9 @@ viverra nec, fringilla in, laoreet vitae, risus.</li>
 <li>  Donec sit amet nisl. Aliquam semper ipsum sit amet velit.
 Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
 viverra nec, fringilla in, laoreet vitae, risus.
@@ -306,9 +312,9 @@ viverra nec, fringilla in, laoreet vitae, risus.</li>
 <li>  Donec sit amet nisl. Aliquam semper ipsum sit amet velit.
 Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   Bird
 
 *   Magic
@@ -317,9 +323,9 @@ Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 <li><p>Bird</p></li>
 <li><p>Magic</p></li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 1.  This is a list item with two paragraphs. Lorem ipsum dolor
     sit amet, consectetuer adipiscing elit. Aliquam hendrerit
     mi posuere lectus.
@@ -340,9 +346,9 @@ vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
 sit amet velit.</p></li>
 <li><p>Suspendisse id sem consectetuer libero luctus adipiscing.</p></li>
 </ol>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   This is a list item with two paragraphs.
 
     This is the second paragraph in the list item. You're
@@ -359,9 +365,9 @@ only required to indent the first line. Lorem ipsum dolor
 sit amet, consectetuer adipiscing elit.</p></li>
 <li><p>Another item in the same list.</p></li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   A list item with a blockquote:
 
     > This is a blockquote
@@ -375,9 +381,9 @@ sit amet, consectetuer adipiscing elit.</p></li>
 inside a list item.</p>
 </blockquote></li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *   A list item with a code block:
 
         <code goes here>
@@ -388,9 +394,9 @@ inside a list item.</p>
 <pre><code>&lt;code goes here&gt;
 </code></pre></li>
 </ul>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 1986. What a great season.
 
 1986\. What a great season.
@@ -400,9 +406,9 @@ inside a list item.</p>
 </ol>
 
 <p>1986. What a great season.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is a normal paragraph:
 
     This is a code block.
@@ -411,9 +417,9 @@ This is a normal paragraph:
 
 <pre><code>This is a code block.
 </code></pre>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 Here is an example of AppleScript:
 
     tell application "Foo"
@@ -426,9 +432,9 @@ Here is an example of AppleScript:
     beep
 end tell
 </code></pre>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
     <div class="footer">
         &copy; 2004 Foo Corporation
     </div>
@@ -437,9 +443,9 @@ end tell
     &amp;copy; 2004 Foo Corporation
 &lt;/div&gt;
 </code></pre>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 * * *
 
 ***
@@ -459,9 +465,9 @@ end tell
 <hr>
 
 <hr>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is [an example](http://example.com/ "Title") inline link.
 
 [This link](http://example.net/) has no title attribute.
@@ -483,33 +489,33 @@ This is [an example] [id] reference-style link.
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is [an example] [id] reference-style link.
 
 [id]: http://example.com/  'Optional Title Here'
 """, """
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is [an example] [id] reference-style link.
 
 [id]: http://example.com/  (Optional Title Here)
 """, """
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is [an example] [id] reference-style link.
 
 [id]: <http://example.com/>  (Optional Title Here)
 """, """
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 This is [an example] [id] reference-style link.
 This is [an example] [ID] reference-style link.
 
@@ -518,9 +524,9 @@ This is [an example] [ID] reference-style link.
 """, """
 <p>This is <a href="http://example.com/longish/path/to/resource/here" title="Optional Title Here">an example</a> reference-style link.
 This is <a href="http://example.com/longish/path/to/resource/here" title="Optional Title Here">an example</a> reference-style link.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 [Google][]
 
 [Google]: http://google.com/
@@ -532,9 +538,9 @@ Visit [Daring Fireball][] for more information.
 <p><a href="http://google.com/">Google</a></p>
 
 <p>Visit <a href="http://daringfireball.net/">Daring Fireball</a> for more information.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 I get 10 times more traffic from [Google] [1] than from
 [Yahoo] [2] or [MSN] [3].
 
@@ -544,9 +550,9 @@ I get 10 times more traffic from [Google] [1] than from
 """, """
 <p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 I get 10 times more traffic from [Google][] than from
 [Yahoo][] or [MSN][].
 
@@ -556,9 +562,9 @@ I get 10 times more traffic from [Google][] than from
 """, """
 <p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 I get 10 times more traffic from [Google](http://google.com/ "Google")
 than from [Yahoo](http://search.yahoo.com/ "Yahoo Search") or
 [MSN](http://search.msn.com/ "MSN Search").
@@ -566,9 +572,9 @@ than from [Yahoo](http://search.yahoo.com/ "Yahoo Search") or
 <p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a>
 than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 *single asterisks*
 
 _single underscores_
@@ -592,9 +598,9 @@ un*frigging*believable
 <p>un<em>frigging</em>believable</p>
 
 <p>*this text is surrounded by literal asterisks*</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 Use the `printf()` function.
 
 ``There is a literal backtick (`) here.``
@@ -602,9 +608,9 @@ Use the `printf()` function.
 <p>Use the <code>printf()</code> function.</p>
 
 <p><code>There is a literal backtick (`) here.</code></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 A single backtick in a code span: `` ` ``
 
 A backtick-delimited string in a code span: `` `foo` ``
@@ -612,9 +618,9 @@ A backtick-delimited string in a code span: `` `foo` ``
 <p>A single backtick in a code span: <code>`</code></p>
 
 <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 Please don't use any `<blink>` tags.
 
 `&#8212;` is the decimal-encoded equivalent of `&mdash;`.
@@ -622,9 +628,9 @@ Please don't use any `<blink>` tags.
 <p>Please don&#39;t use any <code>&lt;blink&gt;</code> tags.</p>
 
 <p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 ![Alt text](/path/to/img.jpg)
 
 ![Alt text](/path/to/img.jpg "Optional title")
@@ -638,9 +644,9 @@ Please don't use any `<blink>` tags.
 <p><img src="/path/to/img.jpg" alt="Alt text" title="Optional title"></p>
 
 <p><img src="url/to/image" alt="Alt text" title="Optional title attribute"></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 http://example.com/
 
 <http://example.com/>
@@ -652,12 +658,12 @@ http://example.com/
 <p><a href="http://example.com/">http://example.com/</a></p>
 
 <p><a href="mailto:address@example.com">address@example.com</a></p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
-    ("""
+    ef("""
 \*literal asterisks\*
 """, """
 <p>*literal asterisks*</p>
-""", md_render_flags({}), md_ext_flags({})), # ---
+"""), # ---
 
     ]
