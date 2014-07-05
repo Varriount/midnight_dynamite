@@ -1,10 +1,8 @@
-import midnight_dynamite, os, test_data, strutils
+import midnight_dynamite, os, test_data, strutils, sequtils
 
-"""
-Verifies that the certain markdown input generates a specific HTML.
-
-The input/output data is actually in test_data.nim.
-"""
+## Verifies that the certain markdown input generates a specific HTML.
+##
+## The input/output data is actually in test_data.nim.
 
 proc indented(s: string): string =
   ## Returns the string with an indentation using a tab character and quotes.
@@ -81,12 +79,14 @@ proc run_test(info: Test_info): bool =
 
 
 proc run_tests() =
-  ## Iterates over test_strings trying them all and reporting failures.
+  ## Iterates over test_strings trying the test blocks and reporting failures.
+  let
+    tests: seq[Test_info] = @test_strings.filter_it(not it.is_doc)
   var
     SUCCESS: seq[int] = @[]
     FAIL: seq[int] = @[]
 
-  for f, info in test_strings.pairs:
+  for f, info in tests.pairs:
     try:
       if info.run_test:
         SUCCESS.add(f)
@@ -96,9 +96,9 @@ proc run_tests() =
     FAIL.add(f)
 
   if FAIL.len < 1:
-    echo "All (", test_strings.len, ") md tests passed."
+    echo "All (", tests.len, ") md tests passed."
   else:
-    echo "Failed ", FAIL.len, " tests out of ", test_strings.len
+    echo "Failed ", FAIL.len, " tests out of ", tests.len
     for f in FAIL:
       echo "\tTest ", f
 

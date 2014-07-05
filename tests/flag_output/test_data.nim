@@ -1,12 +1,15 @@
 import midnight_dynamite
 
-"""
-Holds the markdown rendering test data.
-
-If the Test_info tuple has a zero length input, it means that the entry is not
-to be tested and instead is to be dumped in the output syntax.md file generated
-as documentation.
-"""
+## Holds the markdown rendering test data.
+##
+## If the Test_info tuple has a zero length input, it means that the entry is
+## not to be tested and instead is to be dumped in the output syntax.md file
+## generated as documentation.
+##
+## Such documentation blocks can be raw or parsed. Raw blocks are passed
+## verbatim to the output markdown. Parsed blocks start with a newline and
+## consists of two more lines, the first being passed verbatim, the second
+## containing the syntax reference intralink.
 
 type
   Test_info* = tuple[input, output: string;
@@ -20,7 +23,20 @@ template ef(a, b: string): Test_info =
 
 const
   test_strings* = [
-    ef("meh", "<p>meh</p>\n"), # ---
+    ef("", """
+# Original markdown syntax
+
+The [midnight_dynamite](https://github.com/gradha/midnight_dynamite) wrapper
+around the [hoedown library](https://github.com/hoedown/hoedown) supports the
+[complete original markdown
+syntax](http://daringfireball.net/projects/markdown/basics). What follows are
+the syntax examples given out in the [full syntax
+page](http://daringfireball.net/projects/markdown/syntax) replicating the
+section hierarchy so you can find easily a specific example.
+"""),
+
+    ef("", "## Overview"),
+    ef("", "\n### Inline HTML\nhtml"),
 
     ef("""
 This is a regular paragraph.
@@ -44,6 +60,8 @@ This is another regular paragraph.
 <p>This is another regular paragraph.</p>
 """), # ---
 
+    ef("", "\n### Automatic escaping for special characters\nautoescape"),
+
     ("http://images.google.com/images?num=30&q=larry+bird",
       "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n",
       md_render_flags({}), md_ext_flags({})), # ---
@@ -63,6 +81,9 @@ This is another regular paragraph.
     ("&copy; AT&T 4 < 5", "<p>&copy; AT&amp;T 4 &lt; 5</p>\n",
       md_render_flags({}), md_ext_flags({})), # ---
 
+    ef("", "## Block Elements"),
+    ef("", "\n### Paragraphs and line breaks\np"),
+
     ef("""
 in
 a
@@ -77,6 +98,8 @@ line</p>
 
 <p>second paragraph</p>
 """), # ---
+
+    ef("", "\n### Headers\nheader"),
 
     ef("""
 This is an H1
@@ -127,6 +150,9 @@ body""", """
 
 <p>body</p>
 """), # ---
+
+    ef("", "## Overview"),
+    ef("", "\n### Blockquotes\nblockquote"),
 
     ef("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
@@ -217,6 +243,8 @@ extra""", """
 <p>extra</p>
 </blockquote>
 """), # ---
+
+    ef("", "\n### Lists\nlist"),
 
     ef("""
 *   Red
@@ -416,6 +444,8 @@ inside a list item.</p>
 <p>1986. What a great season.</p>
 """), # ---
 
+    ef("", "\n### Code blocks\nprecode"),
+
     ef("""
 This is a normal paragraph:
 
@@ -453,6 +483,8 @@ end tell
 </code></pre>
 """), # ---
 
+    ef("", "\n### Horizontal rules\nhr"),
+
     ef("""
 * * *
 
@@ -474,6 +506,9 @@ end tell
 
 <hr>
 """), # ---
+
+    ef("", "## Span Elements"),
+    ef("", "\n### Links\nlink"),
 
     ef("""
 This is [an example](http://example.com/ "Title") inline link.
@@ -582,6 +617,8 @@ than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """), # ---
 
+    ef("", "\n### Emphasis\nem"),
+
     ef("""
 *single asterisks*
 
@@ -607,6 +644,8 @@ un*frigging*believable
 
 <p>*this text is surrounded by literal asterisks*</p>
 """), # ---
+
+    ef("", "\n### Code\ncode"),
 
     ef("""
 Use the `printf()` function.
@@ -638,6 +677,8 @@ Please don't use any `<blink>` tags.
 <p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
 """), # ---
 
+    ef("", "\n### Images\nimg"),
+
     ef("""
 ![Alt text](/path/to/img.jpg)
 
@@ -654,6 +695,9 @@ Please don't use any `<blink>` tags.
 <p><img src="url/to/image" alt="Alt text" title="Optional title attribute"></p>
 """), # ---
 
+    ef("", "## Miscellaneous"),
+    ef("", "\n### Automatic links\nautolink"),
+
     ef("""
 http://example.com/
 
@@ -668,6 +712,8 @@ http://example.com/
 <p><a href="mailto:address@example.com">address@example.com</a></p>
 """), # ---
 
+    ef("", "\n### Backslash escapes\nbackslash"),
+
     ef("""
 \*literal asterisks\*
 """, """
@@ -675,3 +721,16 @@ http://example.com/
 """), # ---
 
     ]
+
+proc is_doc*(x: Test_info): bool =
+  ## Returns true if `x` contains data for a documentation section.
+  result = x.input.len < 1
+
+proc is_raw_doc*(x: Test_info): bool =
+  ## Returns true if the `output` field from `x` has to be passed in unmodified.
+  ##
+  ## Non raw documentation consists of two lines, the first will be passed raw,
+  ## the second contains an embedded reference to the original syntax
+  ## documentation.
+  assert x.is_doc
+  result = not (x.output[0] in {'\c', '\l'})
