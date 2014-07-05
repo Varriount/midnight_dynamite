@@ -16,6 +16,8 @@ wrapper/
 /midnight_dynamite_pkg/hoedown
 /midnight_dynamite_pkg/hoedown.html
 /nakefile
+/tests/flag_output/syntax.html
+/tests/flag_output/syntax.md
 /tests/md_api/README.html
 /tests/md_api/README.md
 /tests/md_api/specific.html

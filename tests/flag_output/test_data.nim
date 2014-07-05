@@ -1,5 +1,13 @@
 import midnight_dynamite
 
+"""
+Holds the markdown rendering test data.
+
+If the Test_info tuple has a zero length input, it means that the entry is not
+to be tested and instead is to be dumped in the output syntax.md file generated
+as documentation.
+"""
+
 type
   Test_info* = tuple[input, output: string;
     render_flags: md_render_flags; extension_flags: md_ext_flags]

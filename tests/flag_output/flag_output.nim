@@ -1,5 +1,10 @@
 import midnight_dynamite, os, test_data, strutils
 
+"""
+Verifies that the certain markdown input generates a specific HTML.
+
+The input/output data is actually in test_data.nim.
+"""
 
 proc indented(s: string): string =
   ## Returns the string with an indentation using a tab character and quotes.
