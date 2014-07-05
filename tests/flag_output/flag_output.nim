@@ -1,4 +1,43 @@
-import midnight_dynamite, os, test_data
+import midnight_dynamite, os, test_data, strutils
+
+
+proc indented(s: string): string =
+  ## Returns the string with an indentation using a tab character and quotes.
+  assert(not s.is_nil)
+  result = "\t\"\"\"" & s.replace("\n", "\n\t") & "\"\"\""
+
+
+proc until_eol(s: string, start: int): string =
+  ## Returns a version of `s` starting from `start` until first line ending
+  var POS = start
+  while POS < s.len:
+    case s[POS]
+    of '\c', '\l': break
+    else: POS.inc
+  result = s[start..POS]
+
+
+proc compare_outputs(t1, t2: string) =
+  ## Compares `t1` with `t2` and tries to show first visually bad character.
+  echo "Failed string comparison. Base reference:"
+  echo t1.indented
+  echo "Compared to:"
+  echo t2.indented
+  echo "First difference"
+  var
+    LINE, COL, POS: int
+  while POS < t1.len and POS < t2.len:
+    if t1[POS] != t2[POS]:
+      break
+    case t2[POS]:
+    of '\c', '\l':
+      LINE.inc
+      COL = 0
+    else:
+      COL.inc
+    POS.inc
+  echo "Line ", LINE, " col ", COL, ": '", t2.until_eol(POS), "'"
+
 
 proc run_test(info: Test_info): bool =
   ## Makes sure `info` produces the expected output.
@@ -27,10 +66,10 @@ proc run_test(info: Test_info): bool =
   let high_level_buffer = MD_PARAMS.render(info.input)
 
   if low_level_buffer != high_level_buffer:
-    echo "low level '", low_level_buffer, "' != '", high_level_buffer, "'"
+    compare_outputs(low_level_buffer, high_level_buffer)
     return
   if low_level_buffer != info.output:
-    echo "low level '", low_level_buffer, "' != '", info.output, "'"
+    compare_outputs(low_level_buffer, info.output)
     return
 
   result = true
@@ -56,6 +95,6 @@ proc run_tests() =
   else:
     echo "Failed ", FAIL.len, " tests out of ", test_strings.len
     for f in FAIL:
-      echo "\tTest ", f, ": '", test_strings[f].input, "'"
+      echo "\tTest ", f
 
 when isMainModule: run_tests()
