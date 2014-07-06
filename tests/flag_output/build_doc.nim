@@ -36,7 +36,7 @@ proc parse_doc_output(t: Base_test_info): string =
 
 
 proc build_doc() =
-  ## Iterates over test_strings generating a md document with.
+  ## Iterates over test strings generating an md document with them.
   ##
   ## The generated document will have all the tests as input/output blocks in
   ## code.
@@ -49,12 +49,24 @@ proc build_doc() =
   finally:
     MD_PARAMS.free
 
-  for pos, info in test_strings.pairs:
+  for info in test_strings:
     if info.is_doc:
       TEXT.add(info.parse_doc_output & "\n")
     else:
       TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
       TEXT.add("Output block:\n\n" & info.output.indented & "\n\n")
+
+  TEXT.add("-------------\n")
+  for anon in ext_test_strings:
+    let info: Ext_test_info = anon
+    if info.is_doc:
+      TEXT.add(info.input & "\n")
+    else:
+      TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
+      TEXT.add("Normal output:\n\n" & info.base_output.indented & "\n\n")
+      TEXT.add("Using extension ``" & $info.extension_flags & "`` ")
+      TEXT.add("and render flags ``" & $info.render_flags & "``:\n\n")
+      TEXT.add(info.ext_output.indented & "\n\n")
 
   echo "Generating ", output_filename_md
   output_filename_md.write_file(TEXT)
