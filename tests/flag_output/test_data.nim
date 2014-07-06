@@ -777,6 +777,8 @@ Try specifying the name of the syntax:
 10 PRINT "AWESOME"
 20 GOTO 10
 ```
+
+This `````codespan ``must`` be closed `by` exactly five backticks. `````
 """, """
 <p>This is an <code>inline triple block</code> thingy. Next:</p>
 
@@ -791,6 +793,8 @@ Try specifying the name of the syntax:
 10 PRINT &quot;AWESOME&quot;
 20 GOTO 10
 </code></p>
+
+<p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
 """, """
 <p>This is an <code>inline triple block</code> thingy. Next:</p>
 
@@ -803,6 +807,8 @@ Try specifying the name of the syntax:
 <pre><code class="language-basic">10 PRINT &quot;AWESOME&quot;
 20 GOTO 10
 </code></pre>
+
+<p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
 """, md_render_flags({}), md_ext_flags({md_ext_fenced_code})), # ---
 
     ("""
