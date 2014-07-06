@@ -19,7 +19,7 @@ proc indented(s: string): string =
   result = indentation & s.replace("\n", indentation_nl)
 
 
-proc parse_doc_output(t: Test_info): string =
+proc parse_doc_output(t: Base_test_info): string =
   ## Returns the proper value for the `t.output` field.
   ##
   ## If the documentation is raw, the whole output is passed. Otherwise the

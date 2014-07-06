@@ -2,8 +2,8 @@ import midnight_dynamite
 
 ## Holds the markdown rendering test data.
 ##
-## If the Test_info tuple has a zero length input, it means that the entry is
-## not to be tested and instead is to be dumped in the output syntax.md file
+## If the Base_test_info tuple has a zero length input, it means that the entry
+## is not to be tested and instead is to be dumped in the output syntax.md file
 ## generated as documentation.
 ##
 ## Such documentation blocks can be raw or parsed. Raw blocks are passed
@@ -12,18 +12,15 @@ import midnight_dynamite
 ## containing the syntax reference intralink.
 
 type
-  Test_info* = tuple[input, output: string;
-    render_flags: md_render_flags; extension_flags: md_ext_flags]
-
-
-template ef(a, b: string): Test_info =
-  ## Expands a two string tuple to an *empty flags* tuple.
-  (a, b, md_render_flags({}), md_ext_flags({}))
+  Ext_test_info* =
+    tuple[input, base_output, ext_output: string;
+      render_flags: md_render_flags; extension_flags: md_ext_flags]
+  Base_test_info* = tuple[input, output: string]
 
 
 const
-  test_strings* = [
-    ef("", """
+  test_strings*: array[67, Base_test_info] = [
+    ("", """
 # Original markdown syntax
 
 The [midnight_dynamite](https://github.com/gradha/midnight_dynamite) wrapper
@@ -35,10 +32,10 @@ page](http://daringfireball.net/projects/markdown/syntax) replicating the
 section hierarchy so you can find easily a specific example.
 """),
 
-    ef("", "## Overview"),
-    ef("", "\n### Inline HTML\nhtml"),
+    ("", "## Overview"),
+    ("", "\n### Inline HTML\nhtml"),
 
-    ef("""
+    ("""
 This is a regular paragraph.
 
 <table>
@@ -60,31 +57,29 @@ This is another regular paragraph.
 <p>This is another regular paragraph.</p>
 """), # ---
 
-    ef("", "\n### Automatic escaping for special characters\nautoescape"),
+    ("", "\n### Automatic escaping for special characters\nautoescape"),
 
     ("http://images.google.com/images?num=30&q=larry+bird",
-      "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n",
-      md_render_flags({}), md_ext_flags({})), # ---
+      "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n"), # ---
 
-    ef("""
+    ("""
 <a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
 """, """
 <p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
 """), # ---
 
-    ef("""
+    ("""
 <a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
 """, """
 <p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
 """), # ---
 
-    ("&copy; AT&T 4 < 5", "<p>&copy; AT&amp;T 4 &lt; 5</p>\n",
-      md_render_flags({}), md_ext_flags({})), # ---
+    ("&copy; AT&T 4 < 5", "<p>&copy; AT&amp;T 4 &lt; 5</p>\n"), # ---
 
-    ef("", "## Block Elements"),
-    ef("", "\n### Paragraphs and line breaks\np"),
+    ("", "## Block Elements"),
+    ("", "\n### Paragraphs and line breaks\np"),
 
-    ef("""
+    ("""
 in
 a
 single
@@ -99,9 +94,9 @@ line</p>
 <p>second paragraph</p>
 """), # ---
 
-    ef("", "\n### Headers\nheader"),
+    ("", "\n### Headers\nheader"),
 
-    ef("""
+    ("""
 This is an H1
 =============
 
@@ -117,7 +112,7 @@ body""", """
 """), # ---
 
 
-    ef("""
+    ("""
 # This is an H1
 
 ## This is an H2
@@ -134,7 +129,7 @@ body""", """
 <p>body</p>
 """), # ---
 
-    ef("""
+    ("""
 # This is an H1 #
 
 ## This is an H2 ##
@@ -151,10 +146,10 @@ body""", """
 <p>body</p>
 """), # ---
 
-    ef("", "## Overview"),
-    ef("", "\n### Blockquotes\nblockquote"),
+    ("", "## Overview"),
+    ("", "\n### Blockquotes\nblockquote"),
 
-    ef("""
+    ("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 > consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
 > Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
@@ -175,7 +170,7 @@ id sem consectetuer libero luctus adipiscing.</p>
 <p>extra</p>
 """), # ---
 
-    ef("""
+    ("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
 Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
@@ -196,7 +191,7 @@ id sem consectetuer libero luctus adipiscing.</p>
 <p>extra</p>
 """), # ---
 
-    ef("""
+    ("""
 > This is the first level of quoting.
 >
 > > This is nested blockquote.
@@ -217,7 +212,7 @@ extra""", """
 <p>extra</p>
 """), # ---
 
-    ef("""
+    ("""
 > ## This is a header.
 >
 > 1.   This is the first list item.
@@ -244,9 +239,9 @@ extra""", """
 </blockquote>
 """), # ---
 
-    ef("", "\n### Lists\nlist"),
+    ("", "\n### Lists\nlist"),
 
-    ef("""
+    ("""
 *   Red
 *   Green
 *   Blue
@@ -258,7 +253,7 @@ extra""", """
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 +   Red
 +   Green
 +   Blue
@@ -270,7 +265,7 @@ extra""", """
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 -   Red
 -   Green
 -   Blue
@@ -282,7 +277,7 @@ extra""", """
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 1.  Bird
 2.  McHale
 3.  Parish
@@ -294,7 +289,7 @@ extra""", """
 </ol>
 """), # ---
 
-    ef("""
+    ("""
 1.  Bird
 1.  McHale
 1.  Parish
@@ -306,7 +301,7 @@ extra""", """
 </ol>
 """), # ---
 
-    ef("""
+    ("""
 3.  Bird
 1.  McHale
 8.  Parish
@@ -318,7 +313,7 @@ extra""", """
 </ol>
 """), # ---
 
-    ef("""
+    ("""
 *   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
     Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
     viverra nec, fringilla in, laoreet vitae, risus.
@@ -334,7 +329,7 @@ Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 *   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
 viverra nec, fringilla in, laoreet vitae, risus.
@@ -350,7 +345,7 @@ Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 *   Bird
 
 *   Magic
@@ -361,7 +356,7 @@ Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 1.  This is a list item with two paragraphs. Lorem ipsum dolor
     sit amet, consectetuer adipiscing elit. Aliquam hendrerit
     mi posuere lectus.
@@ -384,7 +379,7 @@ sit amet velit.</p></li>
 </ol>
 """), # ---
 
-    ef("""
+    ("""
 *   This is a list item with two paragraphs.
 
     This is the second paragraph in the list item. You're
@@ -403,7 +398,7 @@ sit amet, consectetuer adipiscing elit.</p></li>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 *   A list item with a blockquote:
 
     > This is a blockquote
@@ -419,7 +414,7 @@ inside a list item.</p>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 *   A list item with a code block:
 
         <code goes here>
@@ -432,7 +427,7 @@ inside a list item.</p>
 </ul>
 """), # ---
 
-    ef("""
+    ("""
 1986. What a great season.
 
 1986\. What a great season.
@@ -444,9 +439,9 @@ inside a list item.</p>
 <p>1986. What a great season.</p>
 """), # ---
 
-    ef("", "\n### Code blocks\nprecode"),
+    ("", "\n### Code blocks\nprecode"),
 
-    ef("""
+    ("""
 This is a normal paragraph:
 
     This is a code block.
@@ -457,7 +452,7 @@ This is a normal paragraph:
 </code></pre>
 """), # ---
 
-    ef("""
+    ("""
 Here is an example of AppleScript:
 
     tell application "Foo"
@@ -472,7 +467,7 @@ end tell
 </code></pre>
 """), # ---
 
-    ef("""
+    ("""
     <div class="footer">
         &copy; 2004 Foo Corporation
     </div>
@@ -483,9 +478,9 @@ end tell
 </code></pre>
 """), # ---
 
-    ef("", "\n### Horizontal rules\nhr"),
+    ("", "\n### Horizontal rules\nhr"),
 
-    ef("""
+    ("""
 * * *
 
 ***
@@ -507,10 +502,10 @@ end tell
 <hr>
 """), # ---
 
-    ef("", "## Span Elements"),
-    ef("", "\n### Links\nlink"),
+    ("", "## Span Elements"),
+    ("", "\n### Links\nlink"),
 
-    ef("""
+    ("""
 This is [an example](http://example.com/ "Title") inline link.
 
 [This link](http://example.net/) has no title attribute.
@@ -534,7 +529,7 @@ This is [an example] [id] reference-style link.
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 """), # ---
 
-    ef("""
+    ("""
 This is [an example] [id] reference-style link.
 
 [id]: http://example.com/  'Optional Title Here'
@@ -542,7 +537,7 @@ This is [an example] [id] reference-style link.
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 """), # ---
 
-    ef("""
+    ("""
 This is [an example] [id] reference-style link.
 
 [id]: http://example.com/  (Optional Title Here)
@@ -550,7 +545,7 @@ This is [an example] [id] reference-style link.
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 """), # ---
 
-    ef("""
+    ("""
 This is [an example] [id] reference-style link.
 
 [id]: <http://example.com/>  (Optional Title Here)
@@ -558,7 +553,7 @@ This is [an example] [id] reference-style link.
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 """), # ---
 
-    ef("""
+    ("""
 This is [an example] [id] reference-style link.
 This is [an example] [ID] reference-style link.
 
@@ -569,7 +564,7 @@ This is [an example] [ID] reference-style link.
 This is <a href="http://example.com/longish/path/to/resource/here" title="Optional Title Here">an example</a> reference-style link.</p>
 """), # ---
 
-    ef("""
+    ("""
 [Google][]
 
 [Google]: http://google.com/
@@ -583,7 +578,7 @@ Visit [Daring Fireball][] for more information.
 <p>Visit <a href="http://daringfireball.net/">Daring Fireball</a> for more information.</p>
 """), # ---
 
-    ef("""
+    ("""
 I get 10 times more traffic from [Google] [1] than from
 [Yahoo] [2] or [MSN] [3].
 
@@ -595,7 +590,7 @@ I get 10 times more traffic from [Google] [1] than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """), # ---
 
-    ef("""
+    ("""
 I get 10 times more traffic from [Google][] than from
 [Yahoo][] or [MSN][].
 
@@ -607,7 +602,7 @@ I get 10 times more traffic from [Google][] than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """), # ---
 
-    ef("""
+    ("""
 I get 10 times more traffic from [Google](http://google.com/ "Google")
 than from [Yahoo](http://search.yahoo.com/ "Yahoo Search") or
 [MSN](http://search.msn.com/ "MSN Search").
@@ -617,9 +612,9 @@ than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """), # ---
 
-    ef("", "\n### Emphasis\nem"),
+    ("", "\n### Emphasis\nem"),
 
-    ef("""
+    ("""
 *single asterisks*
 
 _single underscores_
@@ -645,9 +640,9 @@ un*frigging*believable
 <p>*this text is surrounded by literal asterisks*</p>
 """), # ---
 
-    ef("", "\n### Code\ncode"),
+    ("", "\n### Code\ncode"),
 
-    ef("""
+    ("""
 Use the `printf()` function.
 
 ``There is a literal backtick (`) here.``
@@ -657,7 +652,7 @@ Use the `printf()` function.
 <p><code>There is a literal backtick (`) here.</code></p>
 """), # ---
 
-    ef("""
+    ("""
 A single backtick in a code span: `` ` ``
 
 A backtick-delimited string in a code span: `` `foo` ``
@@ -667,7 +662,7 @@ A backtick-delimited string in a code span: `` `foo` ``
 <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
 """), # ---
 
-    ef("""
+    ("""
 Please don't use any `<blink>` tags.
 
 `&#8212;` is the decimal-encoded equivalent of `&mdash;`.
@@ -677,9 +672,9 @@ Please don't use any `<blink>` tags.
 <p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
 """), # ---
 
-    ef("", "\n### Images\nimg"),
+    ("", "\n### Images\nimg"),
 
-    ef("""
+    ("""
 ![Alt text](/path/to/img.jpg)
 
 ![Alt text](/path/to/img.jpg "Optional title")
@@ -695,10 +690,10 @@ Please don't use any `<blink>` tags.
 <p><img src="url/to/image" alt="Alt text" title="Optional title attribute"></p>
 """), # ---
 
-    ef("", "## Miscellaneous"),
-    ef("", "\n### Automatic links\nautolink"),
+    ("", "## Miscellaneous"),
+    ("", "\n### Automatic links\nautolink"),
 
-    ef("""
+    ("""
 http://example.com/
 
 <http://example.com/>
@@ -712,9 +707,9 @@ http://example.com/
 <p><a href="mailto:address@example.com">address@example.com</a></p>
 """), # ---
 
-    ef("", "\n### Backslash escapes\nbackslash"),
+    ("", "\n### Backslash escapes\nbackslash"),
 
-    ef("""
+    ("""
 \*literal asterisks\*
 """, """
 <p>*literal asterisks*</p>
@@ -722,11 +717,11 @@ http://example.com/
 
     ]
 
-proc is_doc*(x: Test_info): bool =
+proc is_doc*(x: Base_test_info): bool =
   ## Returns true if `x` contains data for a documentation section.
   result = x.input.len < 1
 
-proc is_raw_doc*(x: Test_info): bool =
+proc is_raw_doc*(x: Base_test_info): bool =
   ## Returns true if the `output` field from `x` has to be passed in unmodified.
   ##
   ## Non raw documentation consists of two lines, the first will be passed raw,

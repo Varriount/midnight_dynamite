@@ -42,7 +42,7 @@ proc compare_outputs(t1, t2: string) =
   echo "Line ", LINE, " col ", COL, ": '", t2.until_eol(POS), "'"
 
 
-proc run_test(info: Test_info): bool =
+proc run_test(info: Base_test_info): bool =
   ## Makes sure `info` produces the expected output.
   var
     RENDER_FLAGS: md_render_flags = {}
@@ -81,7 +81,7 @@ proc run_test(info: Test_info): bool =
 proc run_tests() =
   ## Iterates over test_strings trying the test blocks and reporting failures.
   let
-    tests: seq[Test_info] = @test_strings.filter_it(not it.is_doc)
+    tests: seq[Base_test_info] = @test_strings.filter_it(not it.is_doc)
   var
     SUCCESS: seq[int] = @[]
     FAIL: seq[int] = @[]
