@@ -19,6 +19,16 @@ type
 
 
 const
+  ext_test_strings* = [
+    ("""Is http://www.google.es/ a text or a link?""",
+      """
+<p>Is http://www.google.es/ a text or a link?</p>
+""",
+      """
+<p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
+""", md_render_flags({}), md_ext_flags({md_ext_autolink})), # ---
+    ]
+
   test_strings*: array[67, Base_test_info] = [
     ("", """
 # Original markdown syntax
@@ -718,6 +728,10 @@ http://example.com/
     ]
 
 proc is_doc*(x: Base_test_info): bool =
+  ## Returns true if `x` contains data for a documentation section.
+  result = x.input.len < 1
+
+proc is_doc*(x: Ext_test_info): bool =
   ## Returns true if `x` contains data for a documentation section.
   result = x.input.len < 1
 

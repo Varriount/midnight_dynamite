@@ -44,6 +44,8 @@ proc compare_outputs(t1, t2: string) =
 
 proc run_test(info: Base_test_info): bool =
   ## Makes sure `info` produces the expected output.
+  ##
+  ## Returns false if something went wrong.
   var
     RENDER_FLAGS: md_render_flags = {}
     EXTENSION_FLAGS: md_ext_flags = {}
@@ -78,8 +80,43 @@ proc run_test(info: Base_test_info): bool =
   result = true
 
 
-proc run_tests() =
+proc run_test(info: Ext_test_info): bool =
+  ## Runs the test with ext flags and verifies the output.
+  ##
+  ## Returns false if something went wrong. The test involves making sure the
+  ## extended version matches the expected output, and the base version not
+  ## matching it.
+  var
+    MD_PARAMS = init_md_params(render_flags = info.render_flags,
+      extension_flags = info.extension_flags)
+    BASE_PARAMS = init_md_params(render_flags = {}, extension_flags = {})
+  finally:
+    MD_PARAMS.free
+    BASE_PARAMS.free
+
+  let ext_html = MD_PARAMS.render(info.input)
+  if info.ext_output != ext_html:
+    compare_outputs(ext_html, info.ext_output)
+    return
+
+  let base_html = BASE_PARAMS.render(info.input)
+  if info.base_output != base_html:
+    compare_outputs(base_html, info.base_output)
+    return
+  if ext_html == base_html:
+    # Presumably we would never reach this, unless the operator inserting tests
+    # is not paying enough attention…
+    echo "Eh, rendering output should be different, but base and ext match!"
+    echo info.ext_output.indented
+    return
+
+  result = true
+
+
+proc run_basic_tests(): bool =
   ## Iterates over test_strings trying the test blocks and reporting failures.
+  ##
+  ## Returns false if any test failed.
   let
     tests: seq[Base_test_info] = @test_strings.filter_it(not it.is_doc)
   var
@@ -96,11 +133,48 @@ proc run_tests() =
     FAIL.add(f)
 
   if FAIL.len < 1:
-    echo "All (", tests.len, ") md tests passed."
+    echo "All (", tests.len, ") md base tests passed."
+    result = true
   else:
-    echo "Failed ", FAIL.len, " tests out of ", tests.len
+    echo "Failed ", FAIL.len, " base tests out of ", tests.len
     for f in FAIL:
       echo "\tTest ", f
-    quit(1)
+
+
+proc run_ext_tests(): bool =
+  ## Iterates over ext_test_strings trying the blocks and reporting failures.
+  ##
+  ## Returns false if any test failed.
+  let
+    tests: seq[Ext_test_info] = @ext_test_strings.filter_it(not it.is_doc)
+  var
+    SUCCESS: seq[int] = @[]
+    FAIL: seq[int] = @[]
+
+  for f, info in tests.pairs:
+    try:
+      if info.run_test:
+        SUCCESS.add(f)
+        continue
+    except:
+      echo "Severe error running test ", f
+    FAIL.add(f)
+
+  if FAIL.len < 1:
+    echo "All (", tests.len, ") md ext tests passed."
+    result = true
+  else:
+    echo "Failed ", FAIL.len, " ext tests out of ", tests.len
+    for f in FAIL:
+      echo "\tTest ", f
+
+
+proc run_tests() =
+  ## Wraps invocation of both base and extension tests.
+  var FAIL = false
+  if not run_basic_tests(): FAIL = true
+  if not run_ext_tests(): FAIL = true
+  if FAIL: quit(1)
+
 
 when isMainModule: run_tests()
