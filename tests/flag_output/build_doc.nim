@@ -31,8 +31,8 @@ proc parse_doc_output(t: Base_test_info): string =
     assert lines.len > 2
     assert lines[1].len > 0
     assert lines[2].len > 0
-    result = lines[1] & "\n[See syntax related section](" &
-      syntax_base_url & lines[2] & ").\n"
+    result = "\n### [" & lines[1].strip & "](" &
+      syntax_base_url & lines[2].strip & ")\n"
 
 
 proc build_doc() =

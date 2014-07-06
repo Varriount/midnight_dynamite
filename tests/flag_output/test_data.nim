@@ -52,7 +52,7 @@ section hierarchy so you can find easily a specific example.
 """),
 
     ("", "## Overview"),
-    ("", "\n### Inline HTML\nhtml"),
+    ("", "\nInline HTML\nhtml"),
 
     ("""
 This is a regular paragraph.
@@ -76,7 +76,7 @@ This is another regular paragraph.
 <p>This is another regular paragraph.</p>
 """), # ---
 
-    ("", "\n### Automatic escaping for special characters\nautoescape"),
+    ("", "\nAutomatic escaping for special characters\nautoescape"),
 
     ("http://images.google.com/images?num=30&q=larry+bird",
       "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n"), # ---
@@ -96,7 +96,7 @@ This is another regular paragraph.
     ("&copy; AT&T 4 < 5", "<p>&copy; AT&amp;T 4 &lt; 5</p>\n"), # ---
 
     ("", "## Block Elements"),
-    ("", "\n### Paragraphs and line breaks\np"),
+    ("", "\nParagraphs and line breaks\np"),
 
     ("""
 in
@@ -113,7 +113,7 @@ line</p>
 <p>second paragraph</p>
 """), # ---
 
-    ("", "\n### Headers\nheader"),
+    ("", "\nHeaders\nheader"),
 
     ("""
 This is an H1
@@ -166,7 +166,7 @@ body""", """
 """), # ---
 
     ("", "## Overview"),
-    ("", "\n### Blockquotes\nblockquote"),
+    ("", "\nBlockquotes\nblockquote"),
 
     ("""
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
@@ -258,7 +258,7 @@ extra""", """
 </blockquote>
 """), # ---
 
-    ("", "\n### Lists\nlist"),
+    ("", "\nLists\nlist"),
 
     ("""
 *   Red
@@ -458,7 +458,7 @@ inside a list item.</p>
 <p>1986. What a great season.</p>
 """), # ---
 
-    ("", "\n### Code blocks\nprecode"),
+    ("", "\nCode blocks\nprecode"),
 
     ("""
 This is a normal paragraph:
@@ -497,7 +497,7 @@ end tell
 </code></pre>
 """), # ---
 
-    ("", "\n### Horizontal rules\nhr"),
+    ("", "\nHorizontal rules\nhr"),
 
     ("""
 * * *
@@ -522,7 +522,7 @@ end tell
 """), # ---
 
     ("", "## Span Elements"),
-    ("", "\n### Links\nlink"),
+    ("", "\nLinks\nlink"),
 
     ("""
 This is [an example](http://example.com/ "Title") inline link.
@@ -631,7 +631,7 @@ than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 """), # ---
 
-    ("", "\n### Emphasis\nem"),
+    ("", "\nEmphasis\nem"),
 
     ("""
 *single asterisks*
@@ -659,7 +659,7 @@ un*frigging*believable
 <p>*this text is surrounded by literal asterisks*</p>
 """), # ---
 
-    ("", "\n### Code\ncode"),
+    ("", "\nCode\ncode"),
 
     ("""
 Use the `printf()` function.
@@ -691,7 +691,7 @@ Please don't use any `<blink>` tags.
 <p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
 """), # ---
 
-    ("", "\n### Images\nimg"),
+    ("", "\nImages\nimg"),
 
     ("""
 ![Alt text](/path/to/img.jpg)
@@ -710,7 +710,7 @@ Please don't use any `<blink>` tags.
 """), # ---
 
     ("", "## Miscellaneous"),
-    ("", "\n### Automatic links\nautolink"),
+    ("", "\nAutomatic links\nautolink"),
 
     ("""
 http://example.com/
@@ -726,7 +726,7 @@ http://example.com/
 <p><a href="mailto:address@example.com">address@example.com</a></p>
 """), # ---
 
-    ("", "\n### Backslash escapes\nbackslash"),
+    ("", "\nBackslash escapes\nbackslash"),
 
     ("""
 \*literal asterisks\*
