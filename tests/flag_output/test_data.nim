@@ -18,35 +18,26 @@ type
   Base_test_info* = tuple[input, output: string]
 
 
+proc is_doc*(x: Base_test_info): bool =
+  ## Returns true if `x` contains data for a documentation section.
+  result = x.input.len < 1
+
+proc is_doc*(x: Ext_test_info): bool =
+  ## Returns true if `x` contains data for a documentation section.
+  result = x.input.len < 1
+
+proc is_raw_doc*(x: Base_test_info): bool =
+  ## Returns true if the `output` field from `x` has to be passed in unmodified.
+  ##
+  ## Non raw documentation consists of two lines, the first will be passed raw,
+  ## the second contains an embedded reference to the original syntax
+  ## documentation.
+  assert x.is_doc
+  result = not (x.output[0] in {'\c', '\l'})
+
+
+# Here comes the embedded data for the tests.
 const
-  ext_test_strings* = [
-    ("""Is http://www.google.es/ a text or a link?""",
-      """
-<p>Is http://www.google.es/ a text or a link?</p>
-""", """
-<p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
-""", md_render_flags({}), md_ext_flags({md_ext_autolink})), # ---
-
-    ("""
-*   A list item with a code block:
-
-        <code goes here>
-""", """
-<ul>
-<li><p>A list item with a code block:</p>
-
-<pre><code>&lt;code goes here&gt;
-</code></pre></li>
-</ul>
-""", """
-<ul>
-<li><p>A list item with a code block:</p>
-
-<p><code goes here></p></li>
-</ul>
-""", md_render_flags({}), md_ext_flags({md_ext_disable_indented_code})), # ---
-    ]
-
   test_strings*: array[67, Base_test_info] = [
     ("", """
 # Original markdown syntax
@@ -743,21 +734,357 @@ http://example.com/
 <p>*literal asterisks*</p>
 """), # ---
 
-    ]
+    ] # End of base tests.
 
-proc is_doc*(x: Base_test_info): bool =
-  ## Returns true if `x` contains data for a documentation section.
-  result = x.input.len < 1
+  ext_test_strings* = [
+    ("""Is http://www.google.es/ a text or a link?""",
+      """
+<p>Is http://www.google.es/ a text or a link?</p>
+""", """
+<p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
+""", md_render_flags({}), md_ext_flags({md_ext_autolink})), # ---
 
-proc is_doc*(x: Ext_test_info): bool =
-  ## Returns true if `x` contains data for a documentation section.
-  result = x.input.len < 1
+    ("""
+*   A list item with a code block:
 
-proc is_raw_doc*(x: Base_test_info): bool =
-  ## Returns true if the `output` field from `x` has to be passed in unmodified.
-  ##
-  ## Non raw documentation consists of two lines, the first will be passed raw,
-  ## the second contains an embedded reference to the original syntax
-  ## documentation.
-  assert x.is_doc
-  result = not (x.output[0] in {'\c', '\l'})
+        <code goes here>
+""", """
+<ul>
+<li><p>A list item with a code block:</p>
+
+<pre><code>&lt;code goes here&gt;
+</code></pre></li>
+</ul>
+""", """
+<ul>
+<li><p>A list item with a code block:</p>
+
+<p><code goes here></p></li>
+</ul>
+""", md_render_flags({}), md_ext_flags({md_ext_disable_indented_code})), # ---
+
+    ("""
+This is an ```inline triple block``` thingy. Next:
+
+```
+10 PRINT "AWESOME"
+20 GOTO 10
+```
+
+Try specifying the name of the syntax:
+
+```basic
+10 PRINT "AWESOME"
+20 GOTO 10
+```
+""", """
+<p>This is an <code>inline triple block</code> thingy. Next:</p>
+
+<p><code>
+10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></p>
+
+<p>Try specifying the name of the syntax:</p>
+
+<p><code>basic
+10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></p>
+""", """
+<p>This is an <code>inline triple block</code> thingy. Next:</p>
+
+<pre><code>10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+
+<p>Try specifying the name of the syntax:</p>
+
+<pre><code class="language-basic">10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+""", md_render_flags({}), md_ext_flags({md_ext_fenced_code})), # ---
+
+    ("""
+That's some text with a footnote.[^1]
+
+[^1]: And that's the footnote.
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#footnotes
+"""
+<p>That&#39;s some text with a footnote.[^1]</p>
+
+<p>[^1]: And that&#39;s the footnote.</p>
+""", """
+<p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+""", md_render_flags({}), md_ext_flags({md_ext_footnotes})), # ---
+
+    ("""
+That's some text with a footnote.[^1]
+
+[^1]: And that's the footnote.
+
+    That's the second paragraph.
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#footnotes
+"""
+<p>That&#39;s some text with a footnote.[^1]</p>
+
+<p>[^1]: And that&#39;s the footnote.</p>
+
+<pre><code>That&#39;s the second paragraph.
+</code></pre>
+""", """
+<p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+""", md_render_flags({}), md_ext_flags({md_ext_footnotes})), # ---
+
+    ("""
+That's some text with a footnote.[^1]
+
+[^1]:
+    And that's the footnote.
+
+    That's the second paragraph.
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#footnotes
+"""
+<p>That&#39;s some text with a footnote.[^1]</p>
+
+<p>[^1]:
+    And that&#39;s the footnote.</p>
+
+<pre><code>That&#39;s the second paragraph.
+</code></pre>
+""", """
+<p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+""", md_render_flags({}), md_ext_flags({md_ext_footnotes})), # ---
+
+    ("This is a ==highlight== and ===this too===.",
+      "<p>This is a ==highlight== and ===this too===.</p>\n",
+      "<p>This is a <mark>highlight</mark> and =<mark>this too</mark>=.</p>\n",
+      md_render_flags({}), md_ext_flags({md_ext_highlight})), # ---
+
+    ("""
+This is a regular paragraph.
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", """
+<p>This is a regular paragraph.
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table></p>
+""", """
+<p>This is a regular paragraph.</p>
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", md_render_flags({}), md_ext_flags({md_ext_lax_spacing})), # ---
+
+    ("""
+The argument_parser and midnight_dynamite modules are awesome.
+""", """
+<p>The argument<em>parser and midnight</em>dynamite modules are awesome.</p>
+""", """
+<p>The argument_parser and midnight_dynamite modules are awesome.</p>
+""", md_render_flags({}), md_ext_flags({md_ext_no_intra_emphasis})), # ---
+
+    ("""Use "double quotes" or 'single quotes'.""",
+"""
+<p>Use &quot;double quotes&quot; or &#39;single quotes&#39;.</p>
+""", """
+<p>Use <q>double quotes</q> or &#39;single quotes&#39;.</p>
+""", md_render_flags({}), md_ext_flags({md_ext_quote})), # ---
+
+    ("""
+# This is a header
+
+#This is not!
+""", """
+<h1>This is a header</h1>
+
+<h1>This is not!</h1>
+""", """
+<h1>This is a header</h1>
+
+<p>#This is not!</p>
+""", md_render_flags({}), md_ext_flags({md_ext_space_headers})), # ---
+
+    ("""
+Use ~~striked~~ text.
+Extra ~~~striked~~~ text.
+""", """
+<p>Use ~~striked~~ text.
+Extra ~~~striked~~~ text.</p>
+""", """
+<p>Use <del>striked</del> text.
+Extra ~<del>striked</del>~ text.</p>
+""", md_render_flags({}), md_ext_flags({md_ext_strikethrough})), # ---
+
+    ("y = x^2 + 3", "<p>y = x^2 + 3</p>\n", "<p>y = x<sup>2</sup> + 3</p>\n",
+      md_render_flags({}), md_ext_flags({md_ext_superscript})), # ---
+
+    ("""
+The argument_parser and midnight_dynamite modules are awesome.
+""", """
+<p>The argument<em>parser and midnight</em>dynamite modules are awesome.</p>
+""", """
+<p>The argument<u>parser and midnight</u>dynamite modules are awesome.</p>
+""", md_render_flags({}), md_ext_flags({md_ext_underline})), # ---
+
+    ("""
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#table
+"""
+<p>First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell</p>
+""", """
+<table><thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody></table>
+""", md_render_flags({}), md_ext_flags({md_ext_tables})), # ---
+
+    ("""
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#table
+"""
+<p>| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |</p>
+""", """
+<table><thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody></table>
+""", md_render_flags({}), md_ext_flags({md_ext_tables})), # ---
+
+    ("""
+| Item      | Value | Buy |
+|:---------:|------:|:----|
+| Computer  | $1600 | No  |
+| Phone     |   $12 | Yes |
+| Pipe      |    $1 | No  |
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#table
+"""
+<p>| Item      | Value | Buy |
+|:---------:|------:|:----|
+| Computer  | $1600 | No  |
+| Phone     |   $12 | Yes |
+| Pipe      |    $1 | No  |</p>
+""", """
+<table><thead>
+<tr>
+<th style="text-align: center">Item</th>
+<th style="text-align: right">Value</th>
+<th style="text-align: left">Buy</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: center">Computer</td>
+<td style="text-align: right">$1600</td>
+<td style="text-align: left">No</td>
+</tr>
+<tr>
+<td style="text-align: center">Phone</td>
+<td style="text-align: right">$12</td>
+<td style="text-align: left">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center">Pipe</td>
+<td style="text-align: right">$1</td>
+<td style="text-align: left">No</td>
+</tr>
+</tbody></table>
+""", md_render_flags({}), md_ext_flags({md_ext_tables})), # ---
+
+    ("""
+| One       | line | table |
+|-----------|------|-------|
+""", # Examples from https://michelf.ca/projects/php-markdown/extra/#table
+"""
+<p>| One       | line | table |
+|-----------|------|-------|</p>
+""", """
+<table><thead>
+<tr>
+<th>One</th>
+<th>line</th>
+<th>table</th>
+</tr>
+</thead><tbody>
+</tbody></table>
+""", md_render_flags({}), md_ext_flags({md_ext_tables})), # ---
+    ] # End of extension tests.
