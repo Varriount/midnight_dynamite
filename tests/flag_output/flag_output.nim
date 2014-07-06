@@ -94,15 +94,18 @@ proc run_test(info: Ext_test_info): bool =
     MD_PARAMS.free
     BASE_PARAMS.free
 
+  let base_html = BASE_PARAMS.render(info.input)
+  if info.base_output != base_html:
+    echo "Checking base version:"
+    compare_outputs(base_html, info.base_output)
+    return
+
   let ext_html = MD_PARAMS.render(info.input)
   if info.ext_output != ext_html:
+    echo "Checking extended version:"
     compare_outputs(ext_html, info.ext_output)
     return
 
-  let base_html = BASE_PARAMS.render(info.input)
-  if info.base_output != base_html:
-    compare_outputs(base_html, info.base_output)
-    return
   if ext_html == base_html:
     # Presumably we would never reach this, unless the operator inserting tests
     # is not paying enough attention…

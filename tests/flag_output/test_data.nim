@@ -23,10 +23,28 @@ const
     ("""Is http://www.google.es/ a text or a link?""",
       """
 <p>Is http://www.google.es/ a text or a link?</p>
-""",
-      """
+""", """
 <p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
 """, md_render_flags({}), md_ext_flags({md_ext_autolink})), # ---
+
+    ("""
+*   A list item with a code block:
+
+        <code goes here>
+""", """
+<ul>
+<li><p>A list item with a code block:</p>
+
+<pre><code>&lt;code goes here&gt;
+</code></pre></li>
+</ul>
+""", """
+<ul>
+<li><p>A list item with a code block:</p>
+
+<p><code goes here></p></li>
+</ul>
+""", md_render_flags({}), md_ext_flags({md_ext_disable_indented_code})), # ---
     ]
 
   test_strings*: array[67, Base_test_info] = [
