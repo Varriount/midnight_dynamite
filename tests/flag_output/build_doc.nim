@@ -56,11 +56,10 @@ proc build_doc() =
       TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
       TEXT.add("Output block:\n\n" & info.output.indented & "\n\n")
 
-  TEXT.add("-------------\n")
   for anon in ext_test_strings:
     let info: Ext_test_info = anon
     if info.is_doc:
-      TEXT.add(info.input & "\n")
+      TEXT.add(info.base_output & "\n")
     else:
       TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
       TEXT.add("Normal output:\n\n" & info.base_output.indented & "\n\n")

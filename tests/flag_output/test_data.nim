@@ -36,6 +36,13 @@ proc is_raw_doc*(x: Base_test_info): bool =
   result = not (x.output[0] in {'\c', '\l'})
 
 
+template doc(a: string): Ext_test_info =
+  ## Expands a string into a special *emtpy* Ext_test_info structure.
+  ##
+  ## The text will be embedded in the output doc and ignored by the tester.
+  ("", a, "", md_render_flags({}), md_ext_flags({}))
+
+
 # Here comes the embedded data for the tests.
 const
   test_strings*: array[67, Base_test_info] = [
@@ -737,6 +744,21 @@ http://example.com/
     ] # End of base tests.
 
   ext_test_strings* = [
+    doc"""
+-----
+# Supported extensions
+
+There are several extensions to the markdown syntax which can be enabled. Here
+is a walkthrough of what they accomplish.
+
+## ``md_ext_autolink``
+
+Normal markdown requires that you either create an explicit link or enclose a
+link inside angled brackets (eg. ``<http://google.com>``). When you enable
+``md_ext_autolink`` all the plain text which looks like a URL will be
+hyperlinked.
+""",
+
     ("""Is http://www.google.es/ a text or a link?""",
       """
 <p>Is http://www.google.es/ a text or a link?</p>
@@ -744,24 +766,48 @@ http://example.com/
 <p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
 """, md_render_flags({}), md_ext_flags({md_ext_autolink})), # ---
 
+    doc"""
+## ``md_ext_disable_indented_code``
+
+Turning this extension will stop indented text to be interpreted as code and
+instead will be interpreted like plain text.
+""",
+
     ("""
 *   A list item with a code block:
 
-        <code goes here>
+        while true:
+          echo "Round and round"
 """, """
 <ul>
 <li><p>A list item with a code block:</p>
 
-<pre><code>&lt;code goes here&gt;
+<pre><code>while true:
+  echo &quot;Round and round&quot;
 </code></pre></li>
 </ul>
 """, """
 <ul>
 <li><p>A list item with a code block:</p>
 
-<p><code goes here></p></li>
+<p>while true:
+      echo &quot;Round and round&quot;</p></li>
 </ul>
 """, md_render_flags({}), md_ext_flags({md_ext_disable_indented_code})), # ---
+
+    doc"""
+## ``md_ext_fenced_code``
+
+In markdown whenever you start a span or block with backticks, the text inside
+will use `<code>` html blocks. When you enable this extension, code blocks
+using three backticks will additionally add the `<pre>` tag which is essential
+because by default newlines in mardown don't create `<br>` tags and your code
+would appear all in a single line.
+
+On top of this, it is a convention that if you start a fenced block on a line
+by its own, whatever text you put on the line with the fence will get converted
+as a CSS style for the `<code>` **class** attribute.
+""",
 
     ("""
 This is an ```inline triple block``` thingy. Next:
@@ -810,6 +856,15 @@ This `````codespan ``must`` be closed `by` exactly five backticks. `````
 
 <p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
 """, md_render_flags({}), md_ext_flags({md_ext_fenced_code})), # ---
+
+    doc"""
+## ``md_ext_footnotes``
+
+Enables [Markdown Extra style
+footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes).
+Essentially these work like links but use a caret character (``^``) inside the
+brackets.
+""",
 
     ("""
 That's some text with a footnote.[^1]
@@ -899,10 +954,24 @@ That's some text with a footnote.[^1]
 </div>
 """, md_render_flags({}), md_ext_flags({md_ext_footnotes})), # ---
 
+    doc"""
+## ``md_ext_highlight``
+
+Parses double equal signs as start/end for a highlight span. Highlight spans
+are usually rendered by browsers like yellow background text.
+""",
+
     ("This is a ==highlight== and ===this too===.",
       "<p>This is a ==highlight== and ===this too===.</p>\n",
       "<p>This is a <mark>highlight</mark> and =<mark>this too</mark>=.</p>\n",
       md_render_flags({}), md_ext_flags({md_ext_highlight})), # ---
+
+    doc"""
+## ``md_ext_lax_spacing``
+
+In normal markdown you have to separate HTML code from normal text by an empty
+line. Activating this extension removes that requirement.
+""",
 
     ("""
 This is a regular paragraph.
@@ -928,6 +997,15 @@ This is a regular paragraph.
 </table>
 """, md_render_flags({}), md_ext_flags({md_ext_lax_spacing})), # ---
 
+    doc"""
+## ``md_ext_no_intra_emphasis``
+
+Activating this extension will prevent underscore characters joining words to
+be treated as `<em>` markers. This is quite useful for text referencing
+programming symbols **not** using CamelCase but
+``lower_case_with_underscores``.
+""",
+
     ("""
 The argument_parser and midnight_dynamite modules are awesome.
 """, """
@@ -935,6 +1013,13 @@ The argument_parser and midnight_dynamite modules are awesome.
 """, """
 <p>The argument_parser and midnight_dynamite modules are awesome.</p>
 """, md_render_flags({}), md_ext_flags({md_ext_no_intra_emphasis})), # ---
+
+    doc"""
+## ``md_ext_quote``
+
+Transforms double quotes into `<q>` markers. Non double quotes remain as they
+where.
+""",
 
     ("""Use "double quotes" or 'single quotes'.""",
 """
