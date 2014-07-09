@@ -1028,6 +1028,13 @@ where.
 <p>Use <q>double quotes</q> or &#39;single quotes&#39;.</p>
 """, md_render_flags({}), md_ext_flags({md_ext_quote})), # ---
 
+    doc"""
+## ``md_ext_space_headers``
+
+Enabling this extension requires a space between the hash and the text for a
+line of text to be interpreted as a header.
+""",
+
     ("""
 # This is a header
 
@@ -1042,6 +1049,12 @@ where.
 <p>#This is not!</p>
 """, md_render_flags({}), md_ext_flags({md_ext_space_headers})), # ---
 
+    doc"""
+## ``md_ext_strikethrough``
+
+Parses double tilde signs as start/end for a strike through span.
+""",
+
     ("""
 Use ~~striked~~ text.
 Extra ~~~striked~~~ text.
@@ -1053,8 +1066,21 @@ Extra ~~~striked~~~ text.</p>
 Extra ~<del>striked</del>~ text.</p>
 """, md_render_flags({}), md_ext_flags({md_ext_strikethrough})), # ---
 
+    doc"""
+## ``md_ext_superscript``
+
+Parses caret symbols as start markers for superscript text.
+""",
+
     ("y = x^2 + 3", "<p>y = x^2 + 3</p>\n", "<p>y = x<sup>2</sup> + 3</p>\n",
       md_render_flags({}), md_ext_flags({md_ext_superscript})), # ---
+
+    doc"""
+## ``md_ext_underline``
+
+When this extension is active the renderer will generate ``<u>`` tags instead
+of ``<em>`` tags for underline sections.
+""",
 
     ("""
 The argument_parser and midnight_dynamite modules are awesome.
@@ -1063,6 +1089,14 @@ The argument_parser and midnight_dynamite modules are awesome.
 """, """
 <p>The argument<u>parser and midnight</u>dynamite modules are awesome.</p>
 """, md_render_flags({}), md_ext_flags({md_ext_underline})), # ---
+
+    doc"""
+## ``md_ext_tables``
+
+Enables [Markdown Extra style
+tables](https://michelf.ca/projects/php-markdown/extra/#table). Tables are
+*drawn* with pipes and dashes, and you can specify alignments with colons.
+""",
 
     ("""
 First Header  | Second Header
