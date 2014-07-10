@@ -7,7 +7,10 @@ license      = "MIT"
 
 InstallFiles = """
 
+LICENSE.md
 README.md
+docs/changes.md
+docs/syntax.md
 midnight_dynamite.nim
 midnight_dynamite_pkg/autolink.c
 midnight_dynamite_pkg/autolink.h
@@ -26,6 +29,7 @@ midnight_dynamite_pkg/stack.c
 midnight_dynamite_pkg/stack.h
 midnight_dynamite_pkg/version.c
 midnight_dynamite_pkg/version.h
+nakefile.nim
 nimdoc.cfg
 
 """
