@@ -86,7 +86,7 @@ proc build_doc() =
   ## code.
   var
     MD_PARAMS = init_md_params(render_flags = md_render_default,
-      extension_flags = {md_ext_strikethrough})
+      extension_flags = set[md_ext_flag]({}))
     TEXT = ""
   finally:
     MD_PARAMS.free

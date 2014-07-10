@@ -1395,3 +1395,346 @@ paragraph</p>
       md_ext_flags({})),
 
     ] # --- end of ext_test_strings
+
+when isMainModule:
+  let input = """
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><ul>
+<li><p>A list item with a code block:</p>
+
+<p>while true:
+      echo &quot;Round and round&quot;</p></li>
+</ul>
+</td></tr></table>
+
+## ``md_ext_fenced_code``
+
+In markdown whenever you start a span or block with backticks, the text inside
+will use `<code>` html blocks. When you enable this extension, code blocks
+using three backticks will additionally add the `<pre>` tag which is essential
+because by default newlines in mardown don't create `<br>` tags and your code
+would appear all in a single line.
+
+On top of this, it is a convention that if you start a fenced block on a line
+by its own, whatever text you put on the line with the fence will get converted
+as a CSS style for the `<code>` **class** attribute.
+
+Input block:
+
+    This is an ```inline triple block``` thingy. Next:
+    
+    ```
+    10 PRINT "AWESOME"
+    20 GOTO 10
+    ```
+    
+    Try specifying the name of the syntax:
+    
+    ```basic
+    10 PRINT "AWESOME"
+    20 GOTO 10
+    ```
+    
+    This `````codespan ``must`` be closed `by` exactly five backticks. `````
+    
+
+Normal output:
+
+    <p>This is an <code>inline triple block</code> thingy. Next:</p>
+    
+    <p><code>
+    10 PRINT &quot;AWESOME&quot;
+    20 GOTO 10
+    </code></p>
+    
+    <p>Try specifying the name of the syntax:</p>
+    
+    <p><code>basic
+    10 PRINT &quot;AWESOME&quot;
+    20 GOTO 10
+    </code></p>
+    
+    <p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
+    
+
+Using extension ``{md_ext_fenced_code}`` and render flags ``{}``:
+
+    <p>This is an <code>inline triple block</code> thingy. Next:</p>
+    
+    <pre><code>10 PRINT &quot;AWESOME&quot;
+    20 GOTO 10
+    </code></pre>
+    
+    <p>Try specifying the name of the syntax:</p>
+    
+    <pre><code class="language-basic">10 PRINT &quot;AWESOME&quot;
+    20 GOTO 10
+    </code></pre>
+    
+    <p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>This is an <code>inline triple block</code> thingy. Next:</p>
+
+<pre><code>10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+
+<p>Try specifying the name of the syntax:</p>
+
+<pre><code class="language-basic">10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+
+<p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
+</td></tr></table>
+
+## ``md_ext_footnotes``
+
+Enables [Markdown Extra style
+footnotes](https://michelf.ca/projects/php-markdown/extra/#footnotes).
+Essentially these work like links but use a caret character (``^``) inside the
+brackets.
+
+Input block:
+
+    That's some text with a footnote.[^1]
+    
+    [^1]: And that's the footnote.
+    
+
+Normal output:
+
+    <p>That&#39;s some text with a footnote.[^1]</p>
+    
+    <p>[^1]: And that&#39;s the footnote.</p>
+    
+
+Using extension ``{md_ext_footnotes}`` and render flags ``{}``:
+
+    <p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+    
+    <div class="footnotes">
+    <hr>
+    <ol>
+    
+    <li id="fn1">
+    <p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+    </li>
+    
+    </ol>
+    </div>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+</td></tr></table>
+
+Input block:
+
+    That's some text with a footnote.[^1]
+    
+    [^1]: And that's the footnote.
+    
+        That's the second paragraph.
+    
+
+Normal output:
+
+    <p>That&#39;s some text with a footnote.[^1]</p>
+    
+    <p>[^1]: And that&#39;s the footnote.</p>
+    
+    <pre><code>That&#39;s the second paragraph.
+    </code></pre>
+    
+
+Using extension ``{md_ext_footnotes}`` and render flags ``{}``:
+
+    <p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+    
+    <div class="footnotes">
+    <hr>
+    <ol>
+    
+    <li id="fn1">
+    <p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+    
+    <p>That&#39;s the second paragraph.</p>
+    </li>
+    
+    </ol>
+    </div>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+</td></tr></table>
+
+Input block:
+
+    That's some text with a footnote.[^1]
+    
+    [^1]:
+        And that's the footnote.
+    
+        That's the second paragraph.
+    
+
+Normal output:
+
+    <p>That&#39;s some text with a footnote.[^1]</p>
+    
+    <p>[^1]:
+        And that&#39;s the footnote.</p>
+    
+    <pre><code>That&#39;s the second paragraph.
+    </code></pre>
+    
+
+Using extension ``{md_ext_footnotes}`` and render flags ``{}``:
+
+    <p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+    
+    <div class="footnotes">
+    <hr>
+    <ol>
+    
+    <li id="fn1">
+    <p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+    
+    <p>That&#39;s the second paragraph.</p>
+    </li>
+    
+    </ol>
+    </div>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+</td></tr></table>
+
+## ``md_ext_highlight``
+
+Parses double equal signs as start/end for a highlight span. Highlight spans
+are usually rendered by browsers like yellow background text.
+
+Input block:
+
+    This is a ==highlight== and ===this too===.
+
+Normal output:
+
+    <p>This is a ==highlight== and ===this too===.</p>
+    
+
+Using extension ``{md_ext_highlight}`` and render flags ``{}``:
+
+    <p>This is a <mark>highlight</mark> and =<mark>this too</mark>=.</p>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>This is a <mark>highlight</mark> and =<mark>this too</mark>=.</p>
+</td></tr></table>
+
+## ``md_ext_lax_spacing``
+
+In normal markdown you have to separate HTML code from normal text by an empty
+line. Activating this extension removes that requirement.
+
+Input block:
+
+    This is a regular paragraph.
+    <table>
+        <tr>
+            <td>Foo</td>
+        </tr>
+    </table>
+    
+
+Normal output:
+
+    <p>This is a regular paragraph.
+    <table>
+        <tr>
+            <td>Foo</td>
+        </tr>
+    </table></p>
+    
+
+Using extension ``{md_ext_lax_spacing}`` and render flags ``{}``:
+
+    <p>This is a regular paragraph.</p>
+    
+    <table>
+        <tr>
+            <td>Foo</td>
+        </tr>
+    </table>
+    
+
+Renders as:
+
+<table border='1' width='100%'><tr><td><p>This is a regular paragraph.</p>
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+</td></tr></table>
+
+"""
+  var
+    MD_PARAMS = init_md_params(render_flags = set[md_render_flag]({}),
+      extension_flags = set[md_ext_flag]({}))
+  MD_PARAMS.add(input)
+  let name = "test_data.html"
+  "test_data.md".write_file(input)
+  name.write_file(MD_PARAMS.full_html)
+  echo "See ", name
