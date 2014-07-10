@@ -19,6 +19,20 @@ proc indented(s: string): string =
   result = indentation & s.replace("\n", indentation_nl)
 
 
+proc width(s: string): int =
+  ## Returns the maximum number of colums for `s`.
+  var
+    LINE, COL, POS: int
+  for pos in 0 .. <s.len:
+    case s[pos]:
+    of '\c', '\l':
+      LINE.inc
+      RESULT = max(RESULT, COL)
+      COL = 0
+    else:
+      COL.inc
+
+
 proc parse_doc_output(t: Base_test_info): string =
   ## Returns the proper value for the `t.output` field.
   ##
@@ -35,16 +49,32 @@ proc parse_doc_output(t: Base_test_info): string =
       syntax_base_url & lines[2].strip & ")\n"
 
 
+proc build_result_table(info: Base_test_info): string =
+  ## Returns input and output of `info` with output twice, once as HTML.
+  result = ""
+  let
+    w2 = info.output.width
+  result.add("Input block:\n\n" & info.input.indented & "\n\n")
+  result.add("Output block:\n\n" & info.output.indented & "\n\n")
+  result.add("Renders as:\n\n<table border='1' width='100%'><tr><td>" &
+    info.output & "</td></tr></table>\n\n")
+  #else: This doesn't seem to work?
+  #  result.add("<table border='1'><tr><th>Output block:</th>" &
+  #    "<th>Renders as</th></tr><tr><td>\n\n\n")
+  #  #result.add(info.output & "</td><td>\n\n\n")
+  #  #result.add(info.output.indented & "\n\n</td></tr></table>\n\n")
+  #  result.add(info.output.indented & "\n\n\n</td><td>\n")
+  #  result.add(info.output & "</td></tr></table>\n\n")
+
+
 proc build_doc() =
   ## Iterates over test strings generating an md document with them.
   ##
   ## The generated document will have all the tests as input/output blocks in
   ## code.
   var
-    RENDER_FLAGS: md_render_flags = {}
-    EXTENSION_FLAGS: md_ext_flags = {}
-    MD_PARAMS = init_md_params(render_flags = RENDER_FLAGS,
-      extension_flags = EXTENSION_FLAGS)
+    MD_PARAMS = init_md_params(render_flags = md_render_default,
+      extension_flags = {md_ext_strikethrough})
     TEXT = ""
   finally:
     MD_PARAMS.free
@@ -53,8 +83,7 @@ proc build_doc() =
     if info.is_doc:
       TEXT.add(info.parse_doc_output & "\n")
     else:
-      TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
-      TEXT.add("Output block:\n\n" & info.output.indented & "\n\n")
+      TEXT.add(info.build_result_table)
 
   for anon in ext_test_strings:
     let info: Ext_test_info = anon
