@@ -239,28 +239,92 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <body>
 <div class="document" id="documentId">
 <h1 class="title"></h1>
-<h1>Midnight dynamite license</h1>
+<h1>Midnight dynamite readme</h1>
 
-<p>The MIT License (MIT)<br>
-Copyright (c) 2014 Grzegorz Adam Hankiewicz</p>
+<p><strong>midnight_dynamite</strong> is a <a href="http://nimrod-lang.org">Nimrod</a> wrapper around the
+<a href="https://github.com/hoedown/hoedown">hoedown C library</a> which renders
+<a href="http://daringfireball.net/projects/markdown/">Markdown</a>. The wrapper provides
+both the low level C API and a higher level convenience layer. The higher level
+API is not yet complete and offers only basic rendering features. Missing
+features like table of contents extraction or renderer customization will be
+provided in future releases.</p>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the &quot;Software&quot;), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:</p>
+<h1>License</h1>
 
-<p>The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.</p>
+<p><a href="LICENSE.html">MIT license</a>.</p>
 
-<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.</p>
+<h1>Installing the library</h1>
+
+<h2>Stable version</h2>
+
+<p>Install the <a href="http://nimrod-lang.org/">Nimrod compiler</a>. Then use <a href="https://github.com/nimrod-code/babel">Nimrod&#39;s
+Babel package manager</a> to install:</p>
+
+<pre><code>$ babel update
+$ babel install midnight_dynamite
+</code></pre>
+
+<h2>Development version</h2>
+
+<p>Install the <a href="http://nimrod-lang.org/">Nimrod compiler</a>. Then use <a href="https://github.com/nimrod-code/babel">Nimrod&#39;s
+Babel package manager</a> to install locally
+the github checkout:</p>
+
+<pre><code>$ git clone --recursive https://github.com/gradha/midnight_dynamite.git
+$ cd midnight_dynamite
+$ babel install -y
+</code></pre>
+
+<p>If you don&#39;t mind downloading the git repo every time you can also use babel to
+install the latest development version:</p>
+
+<pre><code>$ babel update
+$ babel install -y midnight_dynamite@#head
+</code></pre>
+
+<h1>Documentation</h1>
+
+<p>Generated versions of the documentation can be browsed online at
+<a href="http://gradha.github.io/midnight_dynamite/">http://gradha.github.io/midnight_dynamite/</a>.
+You may also browse the <a href="tests">tests directory</a> for usage examples.</p>
+
+<p>Documentation is provided as docstrings, you can generate it yourself running
+the following commands:</p>
+
+<pre><code>$ cd `babel path midnight_dynamite`
+$ nimrod doc midnight_dynamite.nim
+$ open midnight_dynamite.html
+</code></pre>
+
+<p>If you installed using git, run the <code>nimrod doc</code> command where you cloned the
+repo. Here is a minimal practical usage example:</p>
+
+<pre><code>import midnight_dynamite
+
+when isMainModule:
+  var md_params = init_md_params()
+  finally: md_params.free
+  md_params.render_file(&quot;README.md&quot;)
+</code></pre>
+
+<h1>Changes</h1>
+
+<p>This is stable version 0.2.4. For a list of changes see the
+<a href="docs/changes.html">docs/changes.md file</a>.</p>
+
+<h1>Git branches</h1>
+
+<p>This project uses the <a href="https://github.com/nvie/gitflow">git-flow branching
+model</a> with reversed defaults. Stable releases
+are tracked in the <code>stable</code> branch. Development happens in the default
+<code>master</code> branch.</p>
+
+<h1>Feedback</h1>
+
+<p>You can send me feedback through <a href="https://github.com/gradha/midnight_dynamite/issues">GitHub&#39;s issue
+tracker</a>. I also take a
+look from time to time to <a href="http://forum.nimrod-lang.org">Nimrod&#39;s forums</a> where
+you can talk to other nimrod programmers.</p>
 
 <small>Generated: 2014-07-10 23:08:10 UTC</small>
 </div>

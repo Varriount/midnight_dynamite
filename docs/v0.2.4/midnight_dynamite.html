@@ -270,16 +270,29 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                               ## ``doc.file`` attribute will be used to wrap the output in `full_html()`."><wbr />md_<wbr />params</a></li>
   <li><a class="reference" href="#md_render_flag"
     title="md_render_flag* = enum 
-  md_render_skip_html, md_render_html_escape, md_render_expand_tabs, 
-  md_render_safelink, md_render_hard_wrap, md_render_use_xhtml"><wbr />md_<wbr />render_<wbr />flag</a></li>
+  md_render_skip_html,        ## Skips HTML tags altogether.
+  md_render_html_escape,      ## Escapes HTML tags in output.
+  md_render_expand_tabs,      ## Buggy, at the moment all tabs get expanded.
+  md_render_safelink,         ## Allows hyperlinks only to a set of safe protocols.
+  md_render_hard_wrap,        ## Treats all newlines as &lt;br&gt; tags.
+  md_render_use_xhtml         ## Generates XHTML tags instead of HTML tags."><wbr />md_<wbr />render_<wbr />flag</a></li>
   <li><a class="reference" href="#md_render_flags"
     title="md_render_flags* = set[md_render_flag]"><wbr />md_<wbr />render_<wbr />flags</a></li>
   <li><a class="reference" href="#md_ext_flag"
     title="md_ext_flag* = enum 
-  md_ext_tables, md_ext_fenced_code, md_ext_footnotes, md_ext_autolink, 
-  md_ext_strikethrough, md_ext_underline, md_ext_highlight, md_ext_quote, 
-  md_ext_superscript, md_ext_lax_spacing, md_ext_no_intra_emphasis, 
-  md_ext_space_headers, md_ext_disable_indented_code"><wbr />md_<wbr />ext_<wbr />flag</a></li>
+  md_ext_tables,              ## Enables Markdown Extra style tables.
+  md_ext_fenced_code,         ## Enables fenced code blocks.
+  md_ext_footnotes,           ## Enables Markdown Extra style footnotes.
+  md_ext_autolink,            ## Enables parsing URLs into hyperlinks.
+  md_ext_strikethrough,       ## Enables ~~striking~~ text.
+  md_ext_underline,           ## Replaces ``&lt;em&gt;`` tags into ``&lt;u&gt;`` tags in output.
+  md_ext_highlight,           ## Enables ==marking== text.
+  md_ext_quote,               ## Replaces ``&quot;`` characters into ``&lt;q&gt;`` tags in output.
+  md_ext_superscript,         ## Enables carets to start superscript text.
+  md_ext_lax_spacing,         ## Allows no empty lines between HTML and markdown.
+  md_ext_no_intra_emphasis,   ## Disables emphasis between words.
+  md_ext_space_headers,       ## Headers require a space after the hash character.
+  md_ext_disable_indented_code ## Disables indented code blocks."><wbr />md_<wbr />ext_<wbr />flag</a></li>
   <li><a class="reference" href="#md_ext_flags"
     title="md_ext_flags* = set[md_ext_flag]"><wbr />md_<wbr />ext_<wbr />flags</a></li>
 
@@ -290,10 +303,15 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <ul class="simple">
       <li><a class="reference" href="#md_render_default"
     title="md_render_default* = set[md_render_flag]({})"><wbr />md_<wbr />render_<wbr />default</a></li>
+  <li><a class="reference" href="#md_ext_default"
+    title="md_ext_default* = set[md_ext_flag]({md_ext_autolink, md_ext_highlight, 
+                                    md_ext_lax_spacing, 
+                                    md_ext_no_intra_emphasis, 
+                                    md_ext_fenced_code, md_ext_strikethrough})"><wbr />md_<wbr />ext_<wbr />default</a></li>
   <li><a class="reference" href="#version_str"
-    title="version_str* = &quot;0.2.2&quot;"><wbr />version_<wbr />str</a></li>
+    title="version_str* = &quot;0.2.4&quot;"><wbr />version_<wbr />str</a></li>
   <li><a class="reference" href="#version_int"
-    title="version_int* = (major: 0, minor: 2, maintenance: 2)"><wbr />version_<wbr />int</a></li>
+    title="version_int* = (major: 0, minor: 2, maintenance: 4)"><wbr />version_<wbr />int</a></li>
 
   </ul>
 </li>
@@ -355,6 +373,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="content" id="content">
 <p><a class="reference external" href="https://github.com/gradha/midnight_dynamite">midnight_dynamite</a> is a wrapper of the markdown rendering <a class="reference external" href="https://github.com/hoedown/hoedown">hoedown library</a>.</p>
 <p>This module provides a more Nimrodic interface to the <a class="reference external" href="midnight_dynamite_pkg/hoedown.html">low level interface</a>. Usually you will create an <a class="reference external" href="#md_params">md_params object</a> with the <a class="reference external" href="#init_md_params">init_md_params proc</a>. You can then call on the <tt class="docutils literal"><span class="pre">md_params</span></tt> object convenience procs like <a class="reference external" href="#full_html">full_html</a> to render a whole HTML file to memory or <a class="reference external" href="#render_file">render_file</a> to deal with files.</p>
+<p>There are different flavours of markdown. The document <a class="reference external" href="docs/syntax.html">Original markdown syntax</a> explains what is supported by the library and gives some examples of <a class="reference external" href="#md_render_flag">render</a> and <a class="reference external" href="#md_ext_flag">extension</a> flags that can be used.</p>
 
 <div class="section" id="6">
 <h1><a class="toc-backref" href="#56">Imports</a></h1>
@@ -368,21 +387,24 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">hoedown_renderer</span>
 </pre></dt>
 <dd>
-Wraps a raw hoedown_renderer type.
+Wraps a raw hoedown_renderer type. 
+ Initialize this type with <a class="reference external" href="#init_md_renderer">init_md_renderer(...)</a>.
 
 </dd>
 <dt id="md_document"><a name="md_document"></a><pre><span class="Identifier">md_document</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">object</span> 
   <span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">hoedown_document</span>
 </pre></dt>
 <dd>
-Wraps a raw hoedown_document type.
+Wraps a raw hoedown_document type. 
+ Build an object of this type with <a class="reference external" href="#document">document(...)</a>.
 
 </dd>
 <dt id="md_buffer"><a name="md_buffer"></a><pre><span class="Identifier">md_buffer</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">object</span> 
   <span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">hoedown_buffer</span>
 </pre></dt>
 <dd>
-Wraps a raw hoedown_buffer type.
+Wraps a raw hoedown_buffer type. 
+ Initialize this type with <a class="reference external" href="#init_md_buffer">init_md_buffer(...)</a>.
 
 </dd>
 <dt id="md_params"><a name="md_params"></a><pre><span class="Identifier">md_params</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">object</span> 
@@ -400,29 +422,50 @@ In general the only public field you might want to change yourself is <tt class=
 
 </dd>
 <dt id="md_render_flag"><a name="md_render_flag"></a><pre><span class="Identifier">md_render_flag</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">enum</span> 
-  <span class="Identifier">md_render_skip_html</span><span class="Other">,</span> <span class="Identifier">md_render_html_escape</span><span class="Other">,</span> <span class="Identifier">md_render_expand_tabs</span><span class="Other">,</span> 
-  <span class="Identifier">md_render_safelink</span><span class="Other">,</span> <span class="Identifier">md_render_hard_wrap</span><span class="Other">,</span> <span class="Identifier">md_render_use_xhtml</span></pre></dt>
+  <span class="Identifier">md_render_skip_html</span><span class="Other">,</span>        <span class="Comment">## Skips HTML tags altogether.</span>
+  <span class="Identifier">md_render_html_escape</span><span class="Other">,</span>      <span class="Comment">## Escapes HTML tags in output.</span>
+  <span class="Identifier">md_render_expand_tabs</span><span class="Other">,</span>      <span class="Comment">## Buggy, at the moment all tabs get expanded.</span>
+  <span class="Identifier">md_render_safelink</span><span class="Other">,</span>         <span class="Comment">## Allows hyperlinks only to a set of safe protocols.</span>
+  <span class="Identifier">md_render_hard_wrap</span><span class="Other">,</span>        <span class="Comment">## Treats all newlines as &lt;br&gt; tags.</span>
+  <span class="Identifier">md_render_use_xhtml</span>         <span class="Comment">## Generates XHTML tags instead of HTML tags.</span></pre></dt>
 <dd>
-Available flags for creation of renderers.
+<p>
+Available flags for creation of renderers.</p>
+<p>These flags change how the rendering generates HTML. You can see examples of these flags in the <a class="reference external" href="docs/syntax.html">Original markdown syntax</a> document.</p>
+
 
 </dd>
 <dt id="md_render_flags"><a name="md_render_flags"></a><pre><span class="Identifier">md_render_flags</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">md_render_flag</span><span class="Other">]</span></pre></dt>
 <dd>
-Set of renderer flags.
+
+Type alias for a set of renderer flags.
 
 </dd>
 <dt id="md_ext_flag"><a name="md_ext_flag"></a><pre><span class="Identifier">md_ext_flag</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">enum</span> 
-  <span class="Identifier">md_ext_tables</span><span class="Other">,</span> <span class="Identifier">md_ext_fenced_code</span><span class="Other">,</span> <span class="Identifier">md_ext_footnotes</span><span class="Other">,</span> <span class="Identifier">md_ext_autolink</span><span class="Other">,</span> 
-  <span class="Identifier">md_ext_strikethrough</span><span class="Other">,</span> <span class="Identifier">md_ext_underline</span><span class="Other">,</span> <span class="Identifier">md_ext_highlight</span><span class="Other">,</span> <span class="Identifier">md_ext_quote</span><span class="Other">,</span> 
-  <span class="Identifier">md_ext_superscript</span><span class="Other">,</span> <span class="Identifier">md_ext_lax_spacing</span><span class="Other">,</span> <span class="Identifier">md_ext_no_intra_emphasis</span><span class="Other">,</span> 
-  <span class="Identifier">md_ext_space_headers</span><span class="Other">,</span> <span class="Identifier">md_ext_disable_indented_code</span></pre></dt>
+  <span class="Identifier">md_ext_tables</span><span class="Other">,</span>              <span class="Comment">## Enables Markdown Extra style tables.</span>
+  <span class="Identifier">md_ext_fenced_code</span><span class="Other">,</span>         <span class="Comment">## Enables fenced code blocks.</span>
+  <span class="Identifier">md_ext_footnotes</span><span class="Other">,</span>           <span class="Comment">## Enables Markdown Extra style footnotes.</span>
+  <span class="Identifier">md_ext_autolink</span><span class="Other">,</span>            <span class="Comment">## Enables parsing URLs into hyperlinks.</span>
+  <span class="Identifier">md_ext_strikethrough</span><span class="Other">,</span>       <span class="Comment">## Enables ~~striking~~ text.</span>
+  <span class="Identifier">md_ext_underline</span><span class="Other">,</span>           <span class="Comment">## Replaces ``&lt;em&gt;`` tags into ``&lt;u&gt;`` tags in output.</span>
+  <span class="Identifier">md_ext_highlight</span><span class="Other">,</span>           <span class="Comment">## Enables ==marking== text.</span>
+  <span class="Identifier">md_ext_quote</span><span class="Other">,</span>               <span class="Comment">## Replaces ``&quot;`` characters into ``&lt;q&gt;`` tags in output.</span>
+  <span class="Identifier">md_ext_superscript</span><span class="Other">,</span>         <span class="Comment">## Enables carets to start superscript text.</span>
+  <span class="Identifier">md_ext_lax_spacing</span><span class="Other">,</span>         <span class="Comment">## Allows no empty lines between HTML and markdown.</span>
+  <span class="Identifier">md_ext_no_intra_emphasis</span><span class="Other">,</span>   <span class="Comment">## Disables emphasis between words.</span>
+  <span class="Identifier">md_ext_space_headers</span><span class="Other">,</span>       <span class="Comment">## Headers require a space after the hash character.</span>
+  <span class="Identifier">md_ext_disable_indented_code</span> <span class="Comment">## Disables indented code blocks.</span></pre></dt>
 <dd>
-Available flags for document extensions.
+<p>
+Available flags for document extensions.</p>
+<p>These flags enable different ways of parsing markdown input. You can see examples of these flags in the <a class="reference external" href="docs/syntax.html">Original markdown syntax</a> document.</p>
+
 
 </dd>
 <dt id="md_ext_flags"><a name="md_ext_flags"></a><pre><span class="Identifier">md_ext_flags</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">md_ext_flag</span><span class="Other">]</span></pre></dt>
 <dd>
-Set of extension flags.
+
+Type alias for a set of extension flags.
 
 </dd>
 
@@ -435,13 +478,21 @@ Set of extension flags.
 Default empty render flags.
 
 </dd>
-<dt id="version_str"><a name="version_str"></a><pre><span class="Identifier">version_str</span><span class="Operator">*</span> <span class="Other">=</span> <span class="StringLit">&quot;0.2.2&quot;</span></pre></dt>
+<dt id="md_ext_default"><a name="md_ext_default"></a><pre><span class="Identifier">md_ext_default</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">md_ext_flag</span><span class="Other">]</span><span class="Other">(</span><span class="Other">{</span><span class="Identifier">md_ext_autolink</span><span class="Other">,</span> <span class="Identifier">md_ext_highlight</span><span class="Other">,</span> 
+                                    <span class="Identifier">md_ext_lax_spacing</span><span class="Other">,</span> 
+                                    <span class="Identifier">md_ext_no_intra_emphasis</span><span class="Other">,</span> 
+                                    <span class="Identifier">md_ext_fenced_code</span><span class="Other">,</span> <span class="Identifier">md_ext_strikethrough</span><span class="Other">}</span><span class="Other">)</span></pre></dt>
+<dd>
+Default GitHub syntax friendly extension flags.
+
+</dd>
+<dt id="version_str"><a name="version_str"></a><pre><span class="Identifier">version_str</span><span class="Operator">*</span> <span class="Other">=</span> <span class="StringLit">&quot;0.2.4&quot;</span></pre></dt>
 <dd>
 Version as a string. 
 The format is <tt class="docutils literal"><span class="pre">digit(.digit)*</span></tt>.
 
 </dd>
-<dt id="version_int"><a name="version_int"></a><pre><span class="Identifier">version_int</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">major</span><span class="Other">:</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">minor</span><span class="Other">:</span> <span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">maintenance</span><span class="Other">:</span> <span class="DecNumber">2</span><span class="Other">)</span></pre></dt>
+<dt id="version_int"><a name="version_int"></a><pre><span class="Identifier">version_int</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">major</span><span class="Other">:</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">minor</span><span class="Other">:</span> <span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">maintenance</span><span class="Other">:</span> <span class="DecNumber">4</span><span class="Other">)</span></pre></dt>
 <dd>
 <p>
 Version as an integer tuple.</p>

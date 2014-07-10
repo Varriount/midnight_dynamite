@@ -239,28 +239,56 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <body>
 <div class="document" id="documentId">
 <h1 class="title"></h1>
-<h1>Midnight dynamite license</h1>
+<h1>Midnight dynamite release steps</h1>
 
-<p>The MIT License (MIT)<br>
-Copyright (c) 2014 Grzegorz Adam Hankiewicz</p>
+<p>Release steps for
+<a href="https://github.com/gradha/midnight_dynamite">midnight_dynamite</a>.</p>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the &quot;Software&quot;), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:</p>
+<ul>
+<li>Create new milestone with version number (<code>vXXX</code>) at
+<a href="https://github.com/gradha/midnight_dynamite/issues/milestones">https://github.com/gradha/midnight_dynamite/issues/milestones</a>.</li>
+<li>Create new dummy issue <code>Release versionname</code> and assign to that milestone.</li>
+<li><code>git flow release start versionname</code> (versionname without v).</li>
+<li>Update version numbers:
 
-<p>The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.</p>
+<ul>
+<li>Modify <a href="../README.html">README.md</a> (s/development/stable/).</li>
+<li>Modify <a href="../midnight_dynamite.nim">midnight_dynamite.nim</a>.</li>
+<li>Modify <a href="../midnight_dynamite.babel">midnight_dynamite.babel</a>.</li>
+<li>Update <a href="changes.html">docs/changes.md</a> with list of changes and
+version/number.</li>
+</ul></li>
+<li><code>git commit -av</code> into the release branch the version number changes.</li>
+<li><code>git flow release finish versionname</code> (the tagname is versionname without
+<code>v</code>).  When specifying the tag message, copy and paste the
+markdown version of the changes log into the message.</li>
+<li>Move closed issues to the release milestone.</li>
+<li>Increase version numbers, <code>master</code> branch gets +0.0.1.
 
-<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.</p>
+<ul>
+<li>Modify <a href="../README.html">README.md</a> (s/development/stable/).</li>
+<li>Modify <a href="../midnight_dynamite.nim">midnight_dynamite.nim</a>.</li>
+<li>Modify <a href="../midnight_dynamite.babel">midnight_dynamite.babel</a>.</li>
+<li>Add to <a href="changes.html">docs/changes.md</a> development version with unknown
+date.</li>
+</ul></li>
+<li><code>git commit -av</code> into <code>master</code> with <em>Bumps version numbers for
+development version. Refs #release issue</em>.</li>
+<li>Regenerate static website.
+
+<ul>
+<li><code>git checkout gh-pages</code> to switch to <code>gh-pages</code>.</li>
+<li><code>rm `git ls-files -o` &amp;&amp; rm -Rf docs</code> to purge files from other branches
+and force regeneration of all docs, even tags.</li>
+<li><code>gh_nimrod_doc_pages -c . &amp;&amp; git add . &amp;&amp; git commit</code>. Tag with
+<code>Regenerates website. Refs #release_issue</code>.</li>
+</ul></li>
+<li><code>git push origin master stable gh-pages --tags</code>.</li>
+<li>Close the dummy release issue.</li>
+<li>Announce at
+<a href="http://forum.nimrod-lang.org/t/469">http://forum.nimrod-lang.org/t/469</a>.</li>
+<li>Close the milestone on github.</li>
+</ul>
 
 <small>Generated: 2014-07-10 23:08:10 UTC</small>
 </div>
