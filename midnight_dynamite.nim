@@ -120,7 +120,7 @@ type
 
 const
   md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
-  md_ext_default = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
+  md_ext_default* = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
     md_ext_lax_spacing, md_ext_no_intra_emphasis, md_ext_fenced_code,
     md_ext_strikethrough}) ## Default GitHub syntax friendly extension flags.
 
