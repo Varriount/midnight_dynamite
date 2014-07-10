@@ -56,8 +56,8 @@ proc build_result_table(info: Base_test_info): string =
     w2 = info.output.width
   result.add("Input block:\n\n" & info.input.indented & "\n\n")
   result.add("Output block:\n\n" & info.output.indented & "\n\n")
-  result.add("Renders as:\n\n<table border='1' width='100%'><tr><td>" &
-    info.output & "</td></tr></table>\n\n")
+  result.add("Renders as:\n\n<div>\n<table border='1' width='100%'><tr><td>" &
+    info.output & "</td></tr></table>\n</div>\n\n")
   #else: This doesn't seem to work?
   #  result.add("<table border='1'><tr><th>Output block:</th>" &
   #    "<th>Renders as</th></tr><tr><td>\n\n\n")
@@ -75,8 +75,8 @@ proc build_result_table(info: Ext_test_info): string =
   RESULT.add("Using extension ``" & $info.extension_flags & "`` ")
   RESULT.add("and render flags ``" & $info.render_flags & "``:\n\n")
   RESULT.add(info.ext_output.indented & "\n\n")
-  #RESULT.add("Renders as:\n\n<table border='1' width='100%'><tr><td>" &
-  #  info.ext_output & "</td></tr></table>\n\n")
+  RESULT.add("Renders as:\n\n<div>\n<table border='1' width='100%'><tr><td>" &
+    info.ext_output & "</td></tr></table>\n</div>\n\n")
 
 
 proc build_doc() =
