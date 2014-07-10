@@ -10,12 +10,15 @@ wrapper/
 /README.html
 /docs/changes.html
 /docs/release_steps.html
+/docs/syntax.html
 /license.html
 /mangler/modified_headers
 /midnight_dynamite.html
 /midnight_dynamite_pkg/hoedown
 /midnight_dynamite_pkg/hoedown.html
 /nakefile
+/tests/flag_output/syntax.html
+/tests/flag_output/syntax.md
 /tests/md_api/README.html
 /tests/md_api/README.md
 /tests/md_api/specific.html

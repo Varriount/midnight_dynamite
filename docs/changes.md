@@ -11,6 +11,8 @@ v0.2.3, ????-??-??
   extension](https://github.com/gradha/midnight_dynamite/issues/12).
 * [Updated babel install
   syntax](https://github.com/gradha/midnight_dynamite/issues/13).
+* [Documented more exported
+  symbols](https://github.com/gradha/midnight_dynamite/issues/4).
 
 v0.2.2, 2014-06-16
 ------------------
