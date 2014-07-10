@@ -1290,4 +1290,32 @@ but &lt;file:///etc/hosts&gt; is not.
 [Using file is bad](file:///etc/hosts).</p>
 """, md_render_flags({md_render_safelink}), md_ext_flags({})), # ---
 
+    ("""
+First
+paragraph
+
+* * *
+
+Second
+paragraph
+
+""", """
+<p>First
+paragraph</p>
+
+<hr>
+
+<p>Second
+paragraph</p>
+""", """
+<p>First<br/>
+paragraph</p>
+
+<hr/>
+
+<p>Second<br/>
+paragraph</p>
+""", md_render_flags({md_render_use_xhtml, md_render_hard_wrap}),
+      md_ext_flags({})),
+
     ] # --- end of ext_test_strings
