@@ -111,5 +111,10 @@ proc build_doc() =
   MD_PARAMS.add(TEXT)
   output_filename_html.write_file(MD_PARAMS.full_html)
 
+  let git_md_dest = ".."/".."/"docs"/"syntax.md"
+  if git_md_dest.exists_file:
+    echo "Copying over git ", git_md_dest
+    output_filename_md.copy_file(git_md_dest)
+
 
 when isMainModule: build_doc()
