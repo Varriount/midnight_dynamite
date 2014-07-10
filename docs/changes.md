@@ -13,6 +13,8 @@ v0.2.3, ????-??-??
   syntax](https://github.com/gradha/midnight_dynamite/issues/13).
 * [Documented more exported
   symbols](https://github.com/gradha/midnight_dynamite/issues/4).
+* [Fixed visibility of
+  md_ext_default](https://github.com/gradha/midnight_dynamite/issues/17).
 
 v0.2.2, 2014-06-16
 ------------------
