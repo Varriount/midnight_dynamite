@@ -1222,11 +1222,42 @@ Content Cell  | Content Cell</p>
 The default render engine supports different flags which modify the output it
 generates.
 
-## ``md_render_html_escape``
+## ``md_render_skip_html``
 
 Markdown allows HTML code to be embedded. This flag disables any HTML code
-since all HTML related characters will be escaped, which is safer for websites
+since all HTML related characters will be skipped, which is safer for websites
 where markdown input is not controlled.
+""",
+
+    ("""
+This is a regular paragraph.
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", """
+<p>This is a regular paragraph.</p>
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", """
+<p>This is a regular paragraph.</p>
+
+<p>Foo
+    
+</p>
+""", md_render_flags({md_render_skip_html}), md_ext_flags({})),
+
+    doc"""
+## ``md_render_html_escape``
+
+Alternative of ``md_render_skip_html`` which disables the HTML but renders it
+in the output as text rather than removing it.
 """,
 
     ("""
