@@ -1215,6 +1215,20 @@ Content Cell  | Content Cell</p>
   # \
   # End of extension tests. Render flags come now.
 
+    doc"""
+-----
+# Render flags
+
+The default render engine supports different flags which modify the output it
+generates.
+
+## ``md_render_html_escape``
+
+Markdown allows HTML code to be embedded. This flag disables any HTML code
+since all HTML related characters will be escaped, which is safer for websites
+where markdown input is not controlled.
+""",
+
     ("""
 This is a regular paragraph.
 
@@ -1250,6 +1264,16 @@ This is a regular paragraph.
 # """, md_render_flags({md_render_expand_tabs}), md_ext_flags({})), # ---
 # wait for https://github.com/hoedown/hoedown/issues/85
 
+    doc"""
+## ``md_render_hard_wrap``
+
+By default markdown requires an emtpy line to insert a line break. This
+extension renders a line break for each input line break. This can be useful
+when you are rendering content for a forum, since most users will type inside
+an autowrapping box and will want to mean new paragraphs with any single line
+break.
+""",
+
     ("""
 This
 is
@@ -1273,6 +1297,20 @@ line<br>
 text</p>
 """, md_render_flags({md_render_hard_wrap}), md_ext_flags({})), # ---
 
+    doc"""
+## ``md_render_safelink``
+
+When enabled only a set of specific URL protocols will be linked to. These are:
+
+* Local file paths (not using the ``file://`` scheme!)
+* `http://`
+* `https://`
+* `ftp://`
+* `mailto:`
+
+If a link doesn't use one of those protocols it will be rendered as plain text.
+""",
+
     ("""
 The link <mailto:me@somewhere.com> is safe,
 but <file:///etc/hosts> is not.
@@ -1289,6 +1327,13 @@ but &lt;file:///etc/hosts&gt; is not.
 <a href="/etc/hosts">Point without scheme</a>.
 [Using file is bad](file:///etc/hosts).</p>
 """, md_render_flags({md_render_safelink}), md_ext_flags({})), # ---
+
+    doc"""
+## ``md_render_use_xhtml``
+
+Useful when you want to embed into XHTML, renders typical HTML tags like
+``<br>`` or ``<hr>`` in XHTML style.
+""",
 
     ("""
 First
