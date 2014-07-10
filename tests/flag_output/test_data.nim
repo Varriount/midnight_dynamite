@@ -1273,4 +1273,21 @@ line<br>
 text</p>
 """, md_render_flags({md_render_hard_wrap}), md_ext_flags({})), # ---
 
+    ("""
+The link <mailto:me@somewhere.com> is safe,
+but <file:///etc/hosts> is not.
+[Point without scheme](/etc/hosts).
+[Using file is bad](file:///etc/hosts).
+""", """
+<p>The link <a href="mailto:me@somewhere.com">me@somewhere.com</a> is safe,
+but <a href="file:///etc/hosts">file:///etc/hosts</a> is not.
+<a href="/etc/hosts">Point without scheme</a>.
+<a href="file:///etc/hosts">Using file is bad</a>.</p>
+""", """
+<p>The link <a href="mailto:me@somewhere.com">me@somewhere.com</a> is safe,
+but &lt;file:///etc/hosts&gt; is not.
+<a href="/etc/hosts">Point without scheme</a>.
+[Using file is bad](file:///etc/hosts).</p>
+""", md_render_flags({md_render_safelink}), md_ext_flags({})), # ---
+
     ] # --- end of ext_test_strings
