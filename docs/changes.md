@@ -15,6 +15,8 @@ v0.2.3, ????-??-??
   symbols](https://github.com/gradha/midnight_dynamite/issues/4).
 * [Fixed visibility of
   md_ext_default](https://github.com/gradha/midnight_dynamite/issues/17).
+* [Added nake with local doc
+  generation](https://github.com/gradha/midnight_dynamite/issues/18).
 
 v0.2.2, 2014-06-16
 ------------------
