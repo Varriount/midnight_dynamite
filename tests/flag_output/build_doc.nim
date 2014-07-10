@@ -39,13 +39,13 @@ proc parse_doc_output(t: Base_test_info): string =
   ## If the documentation is raw, the whole output is passed. Otherwise the
   ## second line is passed along with a generated hyperlink using the third.
   if t.is_raw_doc:
-    result = t.output
+    RESULT = t.output
   else:
     let lines = t.output.split_lines
     assert lines.len > 2
     assert lines[1].len > 0
     assert lines[2].len > 0
-    result = "\n### [" & lines[1].strip & "](" &
+    RESULT = "\n### [" & lines[1].strip & "](" &
       syntax_base_url & lines[2].strip & ")\n"
 
 
@@ -65,6 +65,18 @@ proc build_result_table(info: Base_test_info): string =
   #  #result.add(info.output.indented & "\n\n</td></tr></table>\n\n")
   #  result.add(info.output.indented & "\n\n\n</td><td>\n")
   #  result.add(info.output & "</td></tr></table>\n\n")
+
+
+proc build_result_table(info: Ext_test_info): string =
+  ## Outputs base input as plain text, and ext_output as both text and html.
+  RESULT = ""
+  RESULT.add("Input block:\n\n" & info.input.indented & "\n\n")
+  RESULT.add("Normal output:\n\n" & info.base_output.indented & "\n\n")
+  RESULT.add("Using extension ``" & $info.extension_flags & "`` ")
+  RESULT.add("and render flags ``" & $info.render_flags & "``:\n\n")
+  RESULT.add(info.ext_output.indented & "\n\n")
+  #RESULT.add("Renders as:\n\n<table border='1' width='100%'><tr><td>" &
+  #  info.ext_output & "</td></tr></table>\n\n")
 
 
 proc build_doc() =
@@ -90,11 +102,7 @@ proc build_doc() =
     if info.is_doc:
       TEXT.add(info.base_output & "\n")
     else:
-      TEXT.add("Input block:\n\n" & info.input.indented & "\n\n")
-      TEXT.add("Normal output:\n\n" & info.base_output.indented & "\n\n")
-      TEXT.add("Using extension ``" & $info.extension_flags & "`` ")
-      TEXT.add("and render flags ``" & $info.render_flags & "``:\n\n")
-      TEXT.add(info.ext_output.indented & "\n\n")
+      TEXT.add(info.build_result_table)
 
   echo "Generating ", output_filename_md
   output_filename_md.write_file(TEXT)
