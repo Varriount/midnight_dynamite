@@ -17,6 +17,7 @@ template glob_md(basedir: string = nil): expr =
 
 let
   normal_md_files = concat(glob_md(), glob_md("docs"))
+  modules = ["midnight_dynamite.nim", "midnight_dynamite_pkg"/"hoedown.nim"]
 
 
 proc needs_refresh(target: In_out): bool =
@@ -46,6 +47,15 @@ proc build_all_md_files(): seq[In_out] =
 
 
 proc doc() =
+  # Generate documentation for the nim modules.
+  for module in modules:
+    let html_file = module.change_file_ext("html")
+    if not html_file.needs_refresh(module): continue
+    if not shell("nimrod doc --verbosity:0", module):
+      echo "Could not generate module docs for ", module
+    else:
+      echo "Generated ", html_file
+
   # Generate html files from the md docs.
   var md = init_md_params()
   for f in build_all_md_files():
