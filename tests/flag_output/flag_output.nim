@@ -7,7 +7,8 @@ import midnight_dynamite, os, test_data, strutils, sequtils
 proc indented(s: string): string =
   ## Returns the string with an indentation using a tab character and quotes.
   assert(not s.is_nil)
-  result = "\t\"\"\"" & s.replace("\n", "\n\t") & "\"\"\""
+  result = s.replace("\t", "<tab>")
+  result = "\t\"\"\"" & result.replace("\n", "\n\t") & "\"\"\""
 
 
 proc until_eol(s: string, start: int): string =

@@ -1211,5 +1211,66 @@ Content Cell  | Content Cell</p>
 </tr>
 </thead><tbody>
 </tbody></table>
-""", md_render_flags({}), md_ext_flags({md_ext_tables})), # ---
-    ] # End of extension tests.
+""", md_render_flags({}), md_ext_flags({md_ext_tables})), # \
+  # \
+  # End of extension tests. Render flags come now.
+
+    ("""
+This is a regular paragraph.
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", """
+<p>This is a regular paragraph.</p>
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+""", """
+<p>This is a regular paragraph.</p>
+
+<p>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Foo&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</p>
+""", md_render_flags({md_render_html_escape}), md_ext_flags({})), #\
+#
+#     ("""
+# Inlined	tabs	are	evil?
+# """, """
+# <p>Inlined tabs    are evil?</p>
+# """, """
+# <p>Inlined tabs    are evil?</p>
+# """, md_render_flags({md_render_expand_tabs}), md_ext_flags({})), # ---
+# wait for https://github.com/hoedown/hoedown/issues/85
+
+    ("""
+This
+is
+a
+multi
+line
+text
+""", """
+<p>This
+is
+a
+multi
+line
+text</p>
+""", """
+<p>This<br>
+is<br>
+a<br>
+multi<br>
+line<br>
+text</p>
+""", md_render_flags({md_render_hard_wrap}), md_ext_flags({})), # ---
+
+    ] # --- end of ext_test_strings
