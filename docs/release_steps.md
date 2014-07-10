@@ -16,10 +16,9 @@ Release steps for
     version/number.
 * ``git commit -av`` into the release branch the version number changes.
 * ``git flow release finish versionname`` (the tagname is versionname without
-  ``v``).  When specifying the tag message, copy and paste a text version of
-  the changes log into the message. Add md item markers.
+  ``v``).  When specifying the tag message, copy and paste the
+  markdown version of the changes log into the message.
 * Move closed issues to the release milestone.
-* ``git push origin master stable --tags``.
 * Increase version numbers, ``master`` branch gets +0.0.1.
   * Modify [README.md](../README.md) (s/development/stable/).
   * Modify [midnight_dynamite.nim](../midnight_dynamite.nim).
