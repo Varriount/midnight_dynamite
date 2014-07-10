@@ -11,6 +11,11 @@ import midnight_dynamite_pkg/hoedown, os, strtabs, streams, parsecfg, times,
 ## <#init_md_params>`_. You can then call on the ``md_params`` object
 ## convenience procs like `full_html <#full_html>`_ to render a whole HTML file
 ## to memory or `render_file <#render_file>`_ to deal with files.
+##
+## There are different flavours of markdown. The document `Original markdown
+## syntax <docs/syntax.html>`_ explains what is supported by the library and
+## gives some examples of `render <#md_render_flag>`_ and `extension
+## <#md_ext_flag>`_ flags that can be used.
 
 
 # Symbol list extracted from original hoedown.def.
@@ -48,13 +53,19 @@ export hoedown_stack_top
 export hoedown_version
 
 type
-  md_renderer* = object ## Wraps a raw hoedown_renderer type.
+  md_renderer* = object ## Wraps a raw hoedown_renderer type. \
+    ##
+    ## Initialize this type with `init_md_renderer(...) <#init_md_renderer>`_.
     h: ptr hoedown_renderer
 
-  md_document* = object ## Wraps a raw hoedown_document type.
+  md_document* = object ## Wraps a raw hoedown_document type. \
+    ##
+    ## Build an object of this type with `document(...) <#document>`_.
     h: ptr hoedown_document
 
-  md_buffer* = object ## Wraps a raw hoedown_buffer type.
+  md_buffer* = object ## Wraps a raw hoedown_buffer type. \
+    ##
+    ## Initialize this type with `init_md_buffer(...) <#init_md_buffer>`_.
     h: ptr hoedown_buffer
 
   md_params* = object ## Convenience bundling of the individual raw types. \
@@ -68,30 +79,55 @@ type
     ## by package/docutils/rstgen.defaultConfig(). However, only the
     ## ``doc.file`` attribute will be used to wrap the output in `full_html()`.
 
-  md_render_flag* = enum ## Available flags for creation of renderers.
-    md_render_skip_html, md_render_html_escape, md_render_expand_tabs,
-    md_render_safelink, md_render_hard_wrap, md_render_use_xhtml,
+  md_render_flag* = enum ## \
+    ## Available flags for creation of renderers.
+    ##
+    ## These flags change how the rendering generates HTML. You can see
+    ## examples of these flags in the `Original markdown syntax
+    ## <docs/syntax.html>`_ document.
+    md_render_skip_html, ## Skips HTML tags altogether.
+    md_render_html_escape, ## Escapes HTML tags in output.
+    md_render_expand_tabs, ## Buggy, at the moment all tabs get expanded.
+    md_render_safelink, ## Allows hyperlinks only to a set of safe protocols.
+    md_render_hard_wrap, ## Treats all newlines as <br> tags.
+    md_render_use_xhtml, ## Generates XHTML tags instead of HTML tags.
 
-  md_render_flags* = set[md_render_flag] ## Set of renderer flags.
+  md_render_flags* = set[md_render_flag] ## \
+    ## Type alias for a set of renderer flags.
 
-  md_ext_flag* = enum ## Available flags for document extensions.
-    md_ext_tables, md_ext_fenced_code, md_ext_footnotes, md_ext_autolink,
-    md_ext_strikethrough, md_ext_underline, md_ext_highlight, md_ext_quote,
-    md_ext_superscript, md_ext_lax_spacing, md_ext_no_intra_emphasis,
-    md_ext_space_headers, md_ext_disable_indented_code,
+  md_ext_flag* = enum ## \
+    ## Available flags for document extensions.
+    ##
+    ## These flags enable different ways of parsing markdown input. You can see
+    ## examples of these flags in the `Original markdown syntax
+    ## <docs/syntax.html>`_ document.
+    md_ext_tables, ## Enables Markdown Extra style tables.
+    md_ext_fenced_code, ## Enables fenced code blocks.
+    md_ext_footnotes, ## Enables Markdown Extra style footnotes.
+    md_ext_autolink, ## Enables parsing URLs into hyperlinks.
+    md_ext_strikethrough, ## Enables ~~striking~~ text.
+    md_ext_underline, ## Replaces ``<em>`` tags into ``<u>`` tags in output.
+    md_ext_highlight, ## Enables ==marking== text.
+    md_ext_quote, ## Replaces ``"`` characters into ``<q>`` tags in output.
+    md_ext_superscript, ## Enables carets to start superscript text.
+    md_ext_lax_spacing, ## Allows no empty lines between HTML and markdown.
+    md_ext_no_intra_emphasis, ## Disables emphasis between words.
+    md_ext_space_headers, ## Headers require a space after the hash character.
+    md_ext_disable_indented_code, ## Disables indented code blocks.
 
-  md_ext_flags* = set[md_ext_flag] ## Set of extension flags.
+  md_ext_flags* = set[md_ext_flag] ## \
+    ## Type alias for a set of extension flags.
 
 const
   md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
-  md_ext_default = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
-    md_ext_lax_spacing, md_ext_no_intra_emphasis,
+  md_ext_default* = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
+    md_ext_lax_spacing, md_ext_no_intra_emphasis, md_ext_fenced_code,
     md_ext_strikethrough}) ## Default GitHub syntax friendly extension flags.
 
-  version_str* = "0.2.2" ## Version as a string. \
+  version_str* = "0.2.4" ## Version as a string. \
   ## The format is ``digit(.digit)*``.
 
-  version_int* = (major: 0, minor: 2, maintenance: 2) ## \
+  version_int* = (major: 0, minor: 2, maintenance: 4) ## \
   ## Version as an integer tuple.
   ##
   ## Major version changes mean significant new features or a break in

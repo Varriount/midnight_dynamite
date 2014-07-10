@@ -44,11 +44,15 @@ If you don't mind downloading the git repo every time you can also use babel to
 install the latest development version:
 
     $ babel update
-    $ babel install -y midnight_dynamite#head
+    $ babel install -y midnight_dynamite@#head
 
 
 Documentation
 =============
+
+Generated versions of the documentation can be browsed online at
+[http://gradha.github.io/midnight_dynamite/](http://gradha.github.io/midnight_dynamite/).
+You may also browse the [tests directory](tests) for usage examples.
 
 Documentation is provided as docstrings, you can generate it yourself running
 the following commands:
@@ -67,15 +71,11 @@ repo. Here is a minimal practical usage example:
       finally: md_params.free
       md_params.render_file("README.md")
 
-Generated versions of the documentation can be browsed online at
-[http://gradha.github.io/midnight_dynamite/](http://gradha.github.io/midnight_dynamite/).
-You may also browse the [tests directory](tests) for usage examples.
-
 
 Changes
 =======
 
-This is stable version 0.2.2. For a list of changes see the
+This is stable version 0.2.4. For a list of changes see the
 [docs/changes.md file](docs/changes.md).
 
 
