@@ -4,7 +4,7 @@ Midnight dynamite changes
 Changes log for
 [midnight_dynamite](https://github.com/gradha/midnight_dynamite).
 
-v0.2.3, ????-??-??
+v0.2.4, 2014-07-10
 ------------------
 
 * [Enabled fenced blocks
