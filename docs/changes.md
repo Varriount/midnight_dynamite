@@ -9,6 +9,8 @@ v0.2.5, ????-??-??
 
 * [Add module docstrings to low level C
   module](https://github.com/gradha/midnight_dynamite/issues/20).
+* [Added wrapper for
+  hoedown_version](https://github.com/gradha/midnight_dynamite/issues/21).
 
 v0.2.4, 2014-07-10
 ------------------
