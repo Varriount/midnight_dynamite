@@ -1,3 +1,7 @@
+## Low level `midnight_dynamite <https://github.com/gradha/midnight_dynamite>`_
+## wrapper module around the `hoedown library
+## <https://github.com/hoedown/hoedown>`_.
+
 {.push importc.}
 
 type
