@@ -7,7 +7,8 @@ Changes log for
 v0.2.5, ????-??-??
 ------------------
 
-* Nothing yet.
+* [Add module docstrings to low level C
+  module](https://github.com/gradha/midnight_dynamite/issues/20).
 
 v0.2.4, 2014-07-10
 ------------------
