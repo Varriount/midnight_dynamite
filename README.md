@@ -76,7 +76,8 @@ Changes
 =======
 
 This is development version 0.2.5. For a list of changes see the
-[docs/changes.md file](docs/changes.md).
+[docs/changes.md file](docs/changes.md). The [hoedown
+version](https://github.com/hoedown/hoedown/releases) is 2.0.0.
 
 
 Git branches

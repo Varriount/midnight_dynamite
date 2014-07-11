@@ -120,7 +120,7 @@ type
 
 const
   md_render_default* = set[md_render_flag]({}) ## Default empty render flags.
-  md_ext_default* = set[md_ext_flag]({md_ext_autolink, md_ext_highlight,
+  md_ext_default* = ({md_ext_autolink, md_ext_highlight,
     md_ext_lax_spacing, md_ext_no_intra_emphasis, md_ext_fenced_code,
     md_ext_strikethrough}) ## Default GitHub syntax friendly extension flags.
 
@@ -480,3 +480,25 @@ proc render_file*(p: var md_params; input_filename: string,
   p.reset
   p.add(input_filename.read_file)
   dest.write_file(p.full_html)
+
+
+proc hoedown_version_int(): tuple[major, minor, maintenance: int] =
+  ## Returns the version of the hoedown library as an integer tuple.
+  ##
+  ## The hoedown version is usually very different from the `midnight_dynamite
+  ## version <#version_int>`_ and has to be queried at runtime.
+  var a, b, c: cint
+  hoedown_version(addr(a), addr(b), addr(c))
+  result.major = a
+  result.minor = b
+  result.maintenance = c
+
+
+proc hoedown_version_str(): string =
+  ## Returns the version of the hoedown library as a string.
+  ##
+  ## The format is ``digit.digit.digit``. The hoedown version is usually very
+  ## different from the `midnight_dynamite version <#version_str>`_ and has to
+  ## be queried at runtime.
+  let v = hoedown_version_int()
+  result = $v.major & "." & $v.minor & "." & $v.maintenance
