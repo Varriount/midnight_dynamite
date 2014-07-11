@@ -18,7 +18,13 @@ const
     ["hoedown_autolink type", "hoedown_autolink autolink_type"]] ## \
     ## Strings that will be replaced in the input during header generation.
 
-  prefix_nim = "{.push importc.}\n" ## String to add before the output nim.
+  prefix_nim = """
+## Low level `midnight_dynamite <https://github.com/gradha/midnight_dynamite>`_
+## wrapper module around the `hoedown library
+## <https://github.com/hoedown/hoedown>`_.
+
+{.push importc.}
+""" ## String to add before the output nim.
   postfix_nim = """
 const HOEDOWN_TABLE_ALIGNMASK* = HOEDOWN_TABLE_ALIGN_CENTER
 """ ## String to add after the output nim.
