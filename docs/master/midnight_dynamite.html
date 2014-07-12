@@ -363,6 +363,10 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
     title="render*(p: var md_params; md_text: string): string"><wbr />render</a></li>
   <li><a class="reference" href="#render_file,md_params,string"
     title="render_file*(p: var md_params; input_filename: string; output_filename = &quot;&quot;)"><wbr />render_<wbr />file</a></li>
+  <li><a class="reference" href="#hoedown_version_int,"
+    title="hoedown_version_int*(): tuple[major, minor, maintenance: int]"><wbr />hoedown_<wbr />version_<wbr />int</a></li>
+  <li><a class="reference" href="#hoedown_version_str,"
+    title="hoedown_version_str*(): string"><wbr />hoedown_<wbr />version_<wbr />str</a></li>
 
   </ul>
 </li>
@@ -486,8 +490,10 @@ Default GitHub syntax friendly extension flags.
 </dd>
 <dt id="version_str"><a name="version_str"></a><pre><span class="Identifier">version_str</span><span class="Operator">*</span> <span class="Other">=</span> <span class="StringLit">&quot;0.2.5&quot;</span></pre></dt>
 <dd>
-Version as a string. 
-The format is <tt class="docutils literal"><span class="pre">digit(.digit)*</span></tt>.
+<p>Version as a string. 
+The format is <tt class="docutils literal"><span class="pre">digit(.digit)*</span></tt>.</p>
+<p>This value represents the version of the Nimrod wrapper, to obtain the version of the hoedown C library you need to call <a class="reference external" href="#hoedown_version_str">hoedown_version_str()</a>.</p>
+
 
 </dd>
 <dt id="version_int"><a name="version_int"></a><pre><span class="Identifier">version_int</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">major</span><span class="Other">:</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">minor</span><span class="Other">:</span> <span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">maintenance</span><span class="Other">:</span> <span class="DecNumber">5</span><span class="Other">)</span></pre></dt>
@@ -497,6 +503,7 @@ Version as an integer tuple.</p>
 <p>Major version changes mean significant new features or a break in backwards compatibility.</p>
 <p>Minor version changes can add switches. Minor odd versions are development/git/unstable versions. Minor even versions are public stable releases.</p>
 <p>Maintenance version changes usually mean bugfixes.</p>
+<p>This value represents the version of the Nimrod wrapper, to obtain the version of the hoedown C library you need to call <a class="reference external" href="#hoedown_version_int">hoedown_version_int()</a>.</p>
 
 
 </dd>
@@ -681,12 +688,26 @@ Convenience wrapper over <a class="reference external" href="#init,md_buffer">in
 <span class="Comment"># Generates README.html file</span></pre>
 
 </dd>
+<dt id="hoedown_version_int"><a name="hoedown_version_int,"></a><pre><span class="Keyword">proc</span> <span class="Identifier">hoedown_version_int</span><span class="Operator">*</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">major</span><span class="Other">,</span> <span class="Identifier">minor</span><span class="Other">,</span> <span class="Identifier">maintenance</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">]</span></pre></dt>
+<dd>
+<p>Returns the version of the hoedown library as an integer tuple.</p>
+<p>The hoedown version is usually very different from the <a class="reference external" href="#version_int">midnight_dynamite version</a> and has to be queried at runtime.</p>
+
+
+</dd>
+<dt id="hoedown_version_str"><a name="hoedown_version_str,"></a><pre><span class="Keyword">proc</span> <span class="Identifier">hoedown_version_str</span><span class="Operator">*</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span></pre></dt>
+<dd>
+<p>Returns the version of the hoedown library as a string.</p>
+<p>The format is <tt class="docutils literal"><span class="pre">digit.digit.digit</span></tt>. The hoedown version is usually very different from the <a class="reference external" href="#version_str">midnight_dynamite version</a> and has to be queried at runtime.</p>
+
+
+</dd>
 
 </dl></div>
 
 </div>
 
-<small>Generated: 2014-07-12 16:30:22 UTC</small>
+<small>Generated: 2014-07-12 16:39:04 UTC</small>
 </div>
 </body>
 </html>
