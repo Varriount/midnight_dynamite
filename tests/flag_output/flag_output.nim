@@ -30,6 +30,20 @@ proc until_eol(s: string, start: int): string =
   result = s[start..POS]
 
 
+proc mangle_lines(s: string): string =
+  ## Mangles a string in a very specific way to compare against markdown_pl.
+  ##
+  ## The original perl implementation tends to generate different whitespace
+  ## characters, so to avoid this making the tests fails we remove them. Also,
+  ## hoedown has a tendency to over entityze the output HTML, so we replace
+  ## some typical quotes back to match the perl output.
+  result = s.replace("\n\n", "\n")
+  result = result.replace("\n\n", "\n")
+  result = result.replace(" ", "")
+  result = result.replace("&#39;", "'")
+  result = result.replace("&quot;", "\"")
+
+
 proc compare_outputs(t1, t2: string, prefix = "string comparison") =
   ## Compares `t1` with `t2` and tries to show first visually bad character.
   echo "Failed ", prefix, ". Base reference:"
@@ -108,8 +122,9 @@ proc run_test(info: Base_test_info): bool =
   # Additional perl test if requested.
   if G.call_perl:
     let perl_output = run_perl_markdown(info.input)
-    if low_level_buffer != perl_output:
-      compare_outputs(low_level_buffer, perl_output, "original perl check")
+    if low_level_buffer.mangle_lines != perl_output.mangle_lines:
+      compare_outputs(low_level_buffer.mangle_lines, perl_output.mangle_lines,
+        "loose perl check")
       return
 
   result = true
@@ -221,12 +236,7 @@ proc run_tests() =
   if not run_ext_tests(): FAIL = true
 
   if FAIL: quit(1)
-  else:
-    if G.call_perl: echo "Original perl implementation was called"
-    else: echo """
-Add 'perl' as parameter to test against reference perl markdown.  You can
-download the original perl scrip from
-http://daringfireball.net/projects/markdown."""
+  if G.call_perl: echo "Original perl implementation was called"
 
 
 when isMainModule: run_tests()
