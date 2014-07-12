@@ -281,6 +281,7 @@ This is another regular paragraph.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is a regular paragraph.</p>
 
 <table>
@@ -290,8 +291,8 @@ This is another regular paragraph.
 </table>
 
 <p>This is another regular paragraph.</p>
-
-<p></td></tr></table></p>
+</td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#autoescape">Automatic escaping for special characters</a></h3>
 
@@ -307,8 +308,10 @@ This is another regular paragraph.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>http://images.google.com/images?num=30&amp;q=larry+bird</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -322,23 +325,10 @@ This is another regular paragraph.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
 </td></tr></table>
-
-<p>Input block:</p>
-
-<pre><code>&lt;a href=&quot;http://images.google.com/images?num=30&amp;q=larry+bird&quot;&gt;images&lt;/a&gt;
-</code></pre>
-
-<p>Output block:</p>
-
-<pre><code>&lt;p&gt;&lt;a href=&quot;http://images.google.com/images?num=30&amp;q=larry+bird&quot;&gt;images&lt;/a&gt;&lt;/p&gt;
-</code></pre>
-
-<p>Renders as:</p>
-
-<table border='1' width='100%'><tr><td><p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
-</td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -352,8 +342,10 @@ This is another regular paragraph.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>&copy; AT&amp;T 4 &lt; 5</p>
 </td></tr></table>
+</div>
 
 <h2>Block Elements</h2>
 
@@ -381,6 +373,7 @@ line&lt;/p&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>in
 a
 single
@@ -388,6 +381,7 @@ line</p>
 
 <p>second paragraph</p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#header">Headers</a></h3>
 
@@ -413,12 +407,14 @@ body
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><h1>This is an H1</h1>
 
 <h2>This is an H2</h2>
 
 <p>body</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -444,6 +440,7 @@ body
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><h1>This is an H1</h1>
 
 <h2>This is an H2</h2>
@@ -452,6 +449,7 @@ body
 
 <p>body</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -477,6 +475,7 @@ body
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><h1>This is an H1</h1>
 
 <h2>This is an H2</h2>
@@ -485,6 +484,7 @@ body
 
 <p>body</p>
 </td></tr></table>
+</div>
 
 <h2>Overview</h2>
 
@@ -518,6 +518,7 @@ id sem consectetuer libero luctus adipiscing.&lt;/p&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><blockquote>
 <p>This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
@@ -529,6 +530,7 @@ id sem consectetuer libero luctus adipiscing.</p>
 
 <p>extra</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -558,6 +560,7 @@ id sem consectetuer libero luctus adipiscing.&lt;/p&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><blockquote>
 <p>This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
 consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
@@ -569,6 +572,7 @@ id sem consectetuer libero luctus adipiscing.</p>
 
 <p>extra</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -598,6 +602,7 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><blockquote>
 <p>This is the first level of quoting.</p>
 
@@ -610,6 +615,7 @@ extra
 
 <p>extra</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -645,6 +651,7 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><blockquote>
 <h2>This is a header.</h2>
 
@@ -661,6 +668,7 @@ extra
 <p>extra</p>
 </blockquote>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#list">Lists</a></h3>
 
@@ -682,12 +690,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li>  Red</li>
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -707,12 +717,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li>  Red</li>
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -732,12 +744,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li>  Red</li>
 <li>  Green</li>
 <li>  Blue</li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -757,12 +771,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ol>
 <li> Bird</li>
 <li> McHale</li>
 <li> Parish</li>
 </ol>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -782,12 +798,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ol>
 <li> Bird</li>
 <li> McHale</li>
 <li> Parish</li>
 </ol>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -807,12 +825,14 @@ extra
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ol>
 <li> Bird</li>
 <li> McHale</li>
 <li> Parish</li>
 </ol>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -836,6 +856,7 @@ Suspendisse id sem consectetuer libero luctus adipiscing.&lt;/li&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li>  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
@@ -844,6 +865,7 @@ viverra nec, fringilla in, laoreet vitae, risus.</li>
 Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -867,6 +889,7 @@ Suspendisse id sem consectetuer libero luctus adipiscing.&lt;/li&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li>  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi,
@@ -875,6 +898,7 @@ viverra nec, fringilla in, laoreet vitae, risus.</li>
 Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -893,11 +917,13 @@ Suspendisse id sem consectetuer libero luctus adipiscing.</li>
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li><p>Bird</p></li>
 <li><p>Magic</p></li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -928,6 +954,7 @@ sit amet velit.&lt;/p&gt;&lt;/li&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ol>
 <li><p>This is a list item with two paragraphs. Lorem ipsum dolor
 sit amet, consectetuer adipiscing elit. Aliquam hendrerit
@@ -939,6 +966,7 @@ sit amet velit.</p></li>
 <li><p>Suspendisse id sem consectetuer libero luctus adipiscing.</p></li>
 </ol>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -965,6 +993,7 @@ sit amet, consectetuer adipiscing elit.&lt;/p&gt;&lt;/li&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li><p>This is a list item with two paragraphs.</p>
 
@@ -974,6 +1003,7 @@ sit amet, consectetuer adipiscing elit.</p></li>
 <li><p>Another item in the same list.</p></li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -997,6 +1027,7 @@ inside a list item.&lt;/p&gt;
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li><p>A list item with a blockquote:</p>
 
@@ -1006,6 +1037,7 @@ inside a list item.</p>
 </blockquote></li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1026,6 +1058,7 @@ inside a list item.</p>
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ul>
 <li><p>A list item with a code block:</p>
 
@@ -1033,6 +1066,7 @@ inside a list item.</p>
 </code></pre></li>
 </ul>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1052,12 +1086,14 @@ inside a list item.</p>
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><ol>
 <li>What a great season.</li>
 </ol>
 
 <p>1986. What a great season.</p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#precode">Code blocks</a></h3>
 
@@ -1078,11 +1114,13 @@ inside a list item.</p>
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is a normal paragraph:</p>
 
 <pre><code>This is a code block.
 </code></pre>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1105,6 +1143,7 @@ end tell
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>Here is an example of AppleScript:</p>
 
 <pre><code>tell application &quot;Foo&quot;
@@ -1112,6 +1151,7 @@ end tell
 end tell
 </code></pre>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1130,11 +1170,13 @@ end tell
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><pre><code>&lt;div class=&quot;footer&quot;&gt;
     &amp;copy; 2004 Foo Corporation
 &lt;/div&gt;
 </code></pre>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#hr">Horizontal rules</a></h3>
 
@@ -1166,6 +1208,7 @@ end tell
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><hr>
 
 <hr>
@@ -1176,6 +1219,7 @@ end tell
 
 <hr>
 </td></tr></table>
+</div>
 
 <h2>Span Elements</h2>
 
@@ -1211,6 +1255,7 @@ This is [an example] [id] reference-style link.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is <a href="http://example.com/" title="Title">an example</a> inline link.</p>
 
 <p><a href="http://example.net/">This link</a> has no title attribute.</p>
@@ -1221,6 +1266,7 @@ This is [an example] [id] reference-style link.
 
 <p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1236,8 +1282,10 @@ This is [an example] [id] reference-style link.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1253,8 +1301,10 @@ This is [an example] [id] reference-style link.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1270,8 +1320,10 @@ This is [an example] [id] reference-style link.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is <a href="http://example.com/" title="Optional Title Here">an example</a> reference-style link.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1290,9 +1342,11 @@ This is &lt;a href=&quot;http://example.com/longish/path/to/resource/here&quot; 
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>This is <a href="http://example.com/longish/path/to/resource/here" title="Optional Title Here">an example</a> reference-style link.
 This is <a href="http://example.com/longish/path/to/resource/here" title="Optional Title Here">an example</a> reference-style link.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1314,10 +1368,12 @@ Visit [Daring Fireball][] for more information.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p><a href="http://google.com/">Google</a></p>
 
 <p>Visit <a href="http://daringfireball.net/">Daring Fireball</a> for more information.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1337,9 +1393,11 @@ Visit [Daring Fireball][] for more information.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1359,9 +1417,11 @@ Visit [Daring Fireball][] for more information.
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a> than from
 <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1379,10 +1439,12 @@ than from &lt;a href=&quot;http://search.yahoo.com/&quot; title=&quot;Yahoo Sear
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>I get 10 times more traffic from <a href="http://google.com/" title="Google">Google</a>
 than from <a href="http://search.yahoo.com/" title="Yahoo Search">Yahoo</a> or
 <a href="http://search.msn.com/" title="MSN Search">MSN</a>.</p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#em">Emphasis</a></h3>
 
@@ -1418,6 +1480,7 @@ un*frigging*believable
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p><em>single asterisks</em></p>
 
 <p><em>single underscores</em></p>
@@ -1430,6 +1493,7 @@ un*frigging*believable
 
 <p>*this text is surrounded by literal asterisks*</p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#code">Code</a></h3>
 
@@ -1449,10 +1513,12 @@ un*frigging*believable
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>Use the <code>printf()</code> function.</p>
 
 <p><code>There is a literal backtick (`) here.</code></p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1470,10 +1536,12 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>A single backtick in a code span: <code>`</code></p>
 
 <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
 </td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -1491,10 +1559,12 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>Please don&#39;t use any <code>&lt;blink&gt;</code> tags.</p>
 
 <p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#img">Images</a></h3>
 
@@ -1520,12 +1590,14 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p><img src="/path/to/img.jpg" alt="Alt text"></p>
 
 <p><img src="/path/to/img.jpg" alt="Alt text" title="Optional title"></p>
 
 <p><img src="url/to/image" alt="Alt text" title="Optional title attribute"></p>
 </td></tr></table>
+</div>
 
 <h2>Miscellaneous</h2>
 
@@ -1551,12 +1623,14 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>http://example.com/</p>
 
 <p><a href="http://example.com/">http://example.com/</a></p>
 
 <p><a href="mailto:address@example.com">address@example.com</a></p>
 </td></tr></table>
+</div>
 
 <h3><a href="http://daringfireball.net/projects/markdown/syntax#backslash">Backslash escapes</a></h3>
 
@@ -1572,8 +1646,10 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 <p>Renders as:</p>
 
+<div>
 <table border='1' width='100%'><tr><td><p>*literal asterisks*</p>
 </td></tr></table>
+</div>
 
 <hr>
 
@@ -1603,6 +1679,13 @@ hyperlinked.</p>
 
 <pre><code>&lt;p&gt;Is &lt;a href=&quot;http://www.google.es/&quot;&gt;http://www.google.es/&lt;/a&gt; a text or a link?&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>Is <a href="http://www.google.es/">http://www.google.es/</a> a text or a link?</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_disable_indented_code</code></h2>
 
@@ -1637,6 +1720,18 @@ instead will be interpreted like plain text.</p>
       echo &amp;quot;Round and round&amp;quot;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><ul>
+<li><p>A list item with a code block:</p>
+
+<p>while true:
+      echo &quot;Round and round&quot;</p></li>
+</ul>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_fenced_code</code></h2>
 
@@ -1705,6 +1800,25 @@ This `````codespan ``must`` be closed `by` exactly five backticks. `````
 &lt;p&gt;This &lt;code&gt;codespan ``must`` be closed `by` exactly five backticks.&lt;/code&gt;&lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This is an <code>inline triple block</code> thingy. Next:</p>
+
+<pre><code>10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+
+<p>Try specifying the name of the syntax:</p>
+
+<pre><code class="language-basic">10 PRINT &quot;AWESOME&quot;
+20 GOTO 10
+</code></pre>
+
+<p>This <code>codespan ``must`` be closed `by` exactly five backticks.</code></p>
+</td></tr></table>
+</div>
+
 <h2><code>md_ext_footnotes</code></h2>
 
 <p>Enables <a href="https://michelf.ca/projects/php-markdown/extra/#footnotes">Markdown Extra style
@@ -1742,6 +1856,25 @@ brackets.</p>
 &lt;/div&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+<p></td></tr></table>
+</div></p>
+
 <p>Input block:</p>
 
 <pre><code>That&#39;s some text with a footnote.[^1]
@@ -1778,6 +1911,27 @@ brackets.</p>
 &lt;/ol&gt;
 &lt;/div&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+
+<p></td></tr></table>
+</div></p>
 
 <p>Input block:</p>
 
@@ -1818,6 +1972,27 @@ brackets.</p>
 &lt;/div&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>That&#39;s some text with a footnote.<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>And that&#39;s the footnote.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+
+<p>That&#39;s the second paragraph.</p>
+</li>
+
+</ol>
+</div>
+
+<p></td></tr></table>
+</div></p>
+
 <h2><code>md_ext_highlight</code></h2>
 
 <p>Parses double equal signs as start/end for a highlight span. Highlight spans
@@ -1837,6 +2012,13 @@ are usually rendered by browsers like yellow background text.</p>
 
 <pre><code>&lt;p&gt;This is a &lt;mark&gt;highlight&lt;/mark&gt; and =&lt;mark&gt;this too&lt;/mark&gt;=.&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This is a <mark>highlight</mark> and =<mark>this too</mark>=.</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_lax_spacing</code></h2>
 
@@ -1874,6 +2056,19 @@ line. Activating this extension removes that requirement.</p>
 &lt;/table&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This is a regular paragraph.</p>
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+</td></tr></table>
+</div>
+
 <h2><code>md_ext_no_intra_emphasis</code></h2>
 
 <p>Activating this extension will prevent underscore characters joining words to
@@ -1896,6 +2091,13 @@ programming symbols <strong>not</strong> using CamelCase but
 <pre><code>&lt;p&gt;The argument_parser and midnight_dynamite modules are awesome.&lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>The argument_parser and midnight_dynamite modules are awesome.</p>
+</td></tr></table>
+</div>
+
 <h2><code>md_ext_quote</code></h2>
 
 <p>Transforms double quotes into <code>&lt;q&gt;</code> markers. Non double quotes remain as they
@@ -1915,6 +2117,13 @@ where.</p>
 
 <pre><code>&lt;p&gt;Use &lt;q&gt;double quotes&lt;/q&gt; or &amp;#39;single quotes&amp;#39;.&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>Use <q>double quotes</q> or &#39;single quotes&#39;.</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_space_headers</code></h2>
 
@@ -1942,6 +2151,15 @@ line of text to be interpreted as a header.</p>
 &lt;p&gt;#This is not!&lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><h1>This is a header</h1>
+
+<p>#This is not!</p>
+</td></tr></table>
+</div>
+
 <h2><code>md_ext_strikethrough</code></h2>
 
 <p>Parses double tilde signs as start/end for a strike through span.</p>
@@ -1964,6 +2182,14 @@ Extra ~~~striked~~~ text.&lt;/p&gt;
 Extra ~&lt;del&gt;striked&lt;/del&gt;~ text.&lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>Use <del>striked</del> text.
+Extra ~<del>striked</del>~ text.</p>
+</td></tr></table>
+</div>
+
 <h2><code>md_ext_superscript</code></h2>
 
 <p>Parses caret symbols as start markers for superscript text.</p>
@@ -1982,6 +2208,13 @@ Extra ~&lt;del&gt;striked&lt;/del&gt;~ text.&lt;/p&gt;
 
 <pre><code>&lt;p&gt;y = x&lt;sup&gt;2&lt;/sup&gt; + 3&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>y = x<sup>2</sup> + 3</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_underline</code></h2>
 
@@ -2002,6 +2235,13 @@ of <code>&lt;em&gt;</code> tags for underline sections.</p>
 
 <pre><code>&lt;p&gt;The argument&lt;u&gt;parser and midnight&lt;/u&gt;dynamite modules are awesome.&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>The argument<u>parser and midnight</u>dynamite modules are awesome.</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_ext_tables</code></h2>
 
@@ -2044,6 +2284,27 @@ Content Cell  | Content Cell&lt;/p&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><table><thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody></table>
+</td></tr></table>
+</div>
+
 <p>Input block:</p>
 
 <pre><code>| First Header  | Second Header |
@@ -2078,6 +2339,27 @@ Content Cell  | Content Cell&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><table><thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody></table>
+</td></tr></table>
+</div>
 
 <p>Input block:</p>
 
@@ -2124,6 +2406,35 @@ Content Cell  | Content Cell&lt;/p&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><table><thead>
+<tr>
+<th style="text-align: center">Item</th>
+<th style="text-align: right">Value</th>
+<th style="text-align: left">Buy</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: center">Computer</td>
+<td style="text-align: right">$1600</td>
+<td style="text-align: left">No</td>
+</tr>
+<tr>
+<td style="text-align: center">Phone</td>
+<td style="text-align: right">$12</td>
+<td style="text-align: left">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center">Pipe</td>
+<td style="text-align: right">$1</td>
+<td style="text-align: left">No</td>
+</tr>
+</tbody></table>
+</td></tr></table>
+</div>
+
 <p>Input block:</p>
 
 <pre><code>| One       | line | table |
@@ -2147,6 +2458,20 @@ Content Cell  | Content Cell&lt;/p&gt;
 &lt;/thead&gt;&lt;tbody&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><table><thead>
+<tr>
+<th>One</th>
+<th>line</th>
+<th>table</th>
+</tr>
+</thead><tbody>
+</tbody></table>
+</td></tr></table>
+</div>
 
 <hr>
 
@@ -2192,6 +2517,17 @@ where markdown input is not controlled.</p>
 &lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This is a regular paragraph.</p>
+
+<p>Foo
+    
+</p>
+</td></tr></table>
+</div>
+
 <h2><code>md_render_html_escape</code></h2>
 
 <p>Alternative of <code>md_render_skip_html</code> which disables the HTML but renders it
@@ -2229,6 +2565,19 @@ in the output as text rather than removing it.</p>
     &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This is a regular paragraph.</p>
+
+<p>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Foo&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_render_hard_wrap</code></h2>
 
@@ -2268,6 +2617,18 @@ line&lt;br&gt;
 text&lt;/p&gt;
 </code></pre>
 
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>This<br>
+is<br>
+a<br>
+multi<br>
+line<br>
+text</p>
+</td></tr></table>
+</div>
+
 <h2><code>md_render_safelink</code></h2>
 
 <p>When enabled only a set of specific URL protocols will be linked to. These are:</p>
@@ -2305,6 +2666,16 @@ but &amp;lt;file:///etc/hosts&amp;gt; is not.
 &lt;a href=&quot;/etc/hosts&quot;&gt;Point without scheme&lt;/a&gt;.
 [Using file is bad](file:///etc/hosts).&lt;/p&gt;
 </code></pre>
+
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>The link <a href="mailto:me@somewhere.com">me@somewhere.com</a> is safe,
+but &lt;file:///etc/hosts&gt; is not.
+<a href="/etc/hosts">Point without scheme</a>.
+[Using file is bad](file:///etc/hosts).</p>
+</td></tr></table>
+</div>
 
 <h2><code>md_render_use_xhtml</code></h2>
 
@@ -2344,7 +2715,20 @@ paragraph&lt;/p&gt;
 paragraph&lt;/p&gt;
 </code></pre>
 
-<small>Generated: 2014-07-10 23:08:11 UTC</small>
+<p>Renders as:</p>
+
+<div>
+<table border='1' width='100%'><tr><td><p>First<br/>
+paragraph</p>
+
+<hr/>
+
+<p>Second<br/>
+paragraph</p>
+</td></tr></table>
+</div>
+
+<small>Generated: 2014-07-12 16:30:22 UTC</small>
 </div>
 </body>
 </html>
