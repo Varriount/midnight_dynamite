@@ -1,8 +1,17 @@
-import midnight_dynamite, os, test_data, strutils, sequtils
+import midnight_dynamite, os, test_data, strutils, sequtils, osproc, streams
 
 ## Verifies that the certain markdown input generates a specific HTML.
 ##
 ## The input/output data is actually in test_data.nim.
+type
+  Globals = object
+    call_perl: bool
+    perl_exe: string # Nil unless the user activates this.
+
+var
+  G: Globals
+
+const markdown_pl = "Markdown.pl" ## Name of the perl implementation binary.
 
 proc indented(s: string): string =
   ## Returns the string with an indentation using a tab character and quotes.
@@ -21,9 +30,23 @@ proc until_eol(s: string, start: int): string =
   result = s[start..POS]
 
 
-proc compare_outputs(t1, t2: string) =
+proc mangle_lines(s: string): string =
+  ## Mangles a string in a very specific way to compare against markdown_pl.
+  ##
+  ## The original perl implementation tends to generate different whitespace
+  ## characters, so to avoid this making the tests fails we remove them. Also,
+  ## hoedown has a tendency to over entityze the output HTML, so we replace
+  ## some typical quotes back to match the perl output.
+  result = s.replace("\n\n", "\n")
+  result = result.replace("\n\n", "\n")
+  result = result.replace(" ", "")
+  result = result.replace("&#39;", "'")
+  result = result.replace("&quot;", "\"")
+
+
+proc compare_outputs(t1, t2: string, prefix = "string comparison") =
   ## Compares `t1` with `t2` and tries to show first visually bad character.
-  echo "Failed string comparison. Base reference:"
+  echo "Failed ", prefix, ". Base reference:"
   echo t1.indented
   echo "Compared to:"
   echo t2.indented
@@ -41,6 +64,24 @@ proc compare_outputs(t1, t2: string) =
       COL.inc
     POS.inc
   echo "Line ", LINE, " col ", COL, ": '", t2.until_eol(POS), "'"
+
+
+proc run_perl_markdown(input_md: string): string =
+  ## Returns `input_md` processed by the perl binary.
+  ##
+  ## Will abort if something goes wrong.
+  assert(not input_md.is_nil)
+  assert input_md.len > 0
+  var p = start_process(G.perl_exe, args = ["--html4tags"])
+  assert(not p.is_nil)
+  p.input_stream.write(input_md)
+  p.input_stream.close
+  result = ""
+  var line = TaintedString("")
+  while p.output_stream.read_line(line):
+    result.add(line)
+    result.add("\n")
+  p.close()
 
 
 proc run_test(info: Base_test_info): bool =
@@ -77,6 +118,14 @@ proc run_test(info: Base_test_info): bool =
   if low_level_buffer != info.output:
     compare_outputs(low_level_buffer, info.output)
     return
+
+  # Additional perl test if requested.
+  if G.call_perl:
+    let perl_output = run_perl_markdown(info.input)
+    if low_level_buffer.mangle_lines != perl_output.mangle_lines:
+      compare_outputs(low_level_buffer.mangle_lines, perl_output.mangle_lines,
+        "loose perl check")
+      return
 
   result = true
 
@@ -175,10 +224,19 @@ proc run_ext_tests(): bool =
 
 proc run_tests() =
   ## Wraps invocation of both base and extension tests.
+  if "perl" in command_line_params():
+    G.perl_exe = markdown_pl.find_exe
+    if G.perl_exe.len > 0:
+      G.call_perl = true
+    else:
+      echo "Not activating perl tests becase '", markdown_pl, " wasn't found."
+
   var FAIL = false
   if not run_basic_tests(): FAIL = true
   if not run_ext_tests(): FAIL = true
+
   if FAIL: quit(1)
+  if G.call_perl: echo "Original perl implementation was called"
 
 
 when isMainModule: run_tests()
