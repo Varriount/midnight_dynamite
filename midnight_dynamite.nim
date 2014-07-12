@@ -126,6 +126,10 @@ const
 
   version_str* = "0.2.5" ## Version as a string. \
   ## The format is ``digit(.digit)*``.
+  ##
+  ## This value represents the version of the Nimrod wrapper, to obtain the
+  ## version of the hoedown C library you need to call `hoedown_version_str()
+  ## <#hoedown_version_str>`_.
 
   version_int* = (major: 0, minor: 2, maintenance: 5) ## \
   ## Version as an integer tuple.
@@ -138,6 +142,10 @@ const
   ## are public stable releases.
   ##
   ## Maintenance version changes usually mean bugfixes.
+  ##
+  ## This value represents the version of the Nimrod wrapper, to obtain the
+  ## version of the hoedown C library you need to call `hoedown_version_int()
+  ## <#hoedown_version_int>`_.
 
   default_html_config_str = slurp("nimdoc.cfg") ## \
   ## Reads the default html configuration for output headers.
@@ -482,7 +490,7 @@ proc render_file*(p: var md_params; input_filename: string,
   dest.write_file(p.full_html)
 
 
-proc hoedown_version_int(): tuple[major, minor, maintenance: int] =
+proc hoedown_version_int*(): tuple[major, minor, maintenance: int] =
   ## Returns the version of the hoedown library as an integer tuple.
   ##
   ## The hoedown version is usually very different from the `midnight_dynamite
@@ -494,7 +502,7 @@ proc hoedown_version_int(): tuple[major, minor, maintenance: int] =
   result.maintenance = c
 
 
-proc hoedown_version_str(): string =
+proc hoedown_version_str*(): string =
   ## Returns the version of the hoedown library as a string.
   ##
   ## The format is ``digit.digit.digit``. The hoedown version is usually very
