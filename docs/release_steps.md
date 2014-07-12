@@ -28,11 +28,10 @@ Release steps for
 * ``git commit -av`` into ``master`` with *Bumps version numbers for
   development version. Refs #release issue*.
 * Regenerate static website.
-  * ``git checkout gh-pages`` to switch to ``gh-pages``.
-  * ``rm `git ls-files -o` && rm -Rf docs`` to purge files from other branches
-    and force regeneration of all docs, even tags.
-  * ``gh_nimrod_doc_pages -c . && git add . && git commit``. Tag with
-    `Regenerates website. Refs #release_issue`.
+  * Make sure you don't have any pending changes.
+  * Run ``nake web`` and review generated web.
+  * ``git add . && git commit``. Tag with `Regenerates website.
+    Refs #release_issue`.
 * ``git push origin master stable gh-pages --tags``.
 * Close the dummy release issue.
 * Announce at

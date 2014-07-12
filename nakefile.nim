@@ -75,5 +75,15 @@ proc clean() =
       path.removeFile()
   echo "Temporary files cleaned"
 
+proc web() =
+  echo "Changing branches to render gh-pages…"
+  dire_shell "git checkout gh-pages"
+  dire_shell "rm `git ls-files -o`"
+  dire_shell "rm -Rf docs"
+  dire_shell "gh_nimrod_doc_pages -c ."
+  echo "All commands run, now check the output and commit to git."
+  shell "open index.html"
+
 task "doc", "Generates HTML from the md files.": doc()
 task "clean", "Removes temporal files, mostly.": clean()
+task "web", "Renders gh-pages, don't use unless you are gradha.": web()
