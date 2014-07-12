@@ -45,8 +45,8 @@ template doc(a: string): Ext_test_info =
 
 # Here comes the embedded data for the tests.
 const
-  test_strings*: array[67, Base_test_info] = [
-    ("", """
+  test_strings* = [
+    Base_test_info(("", """
 # Original markdown syntax
 
 The [midnight_dynamite](https://github.com/gradha/midnight_dynamite) wrapper
@@ -56,7 +56,7 @@ syntax](http://daringfireball.net/projects/markdown/basics). What follows are
 the syntax examples given out in the [full syntax
 page](http://daringfireball.net/projects/markdown/syntax) replicating the
 section hierarchy so you can find easily a specific example.
-"""),
+""")),
 
     ("", "## Overview"),
     ("", "\nInline HTML\nhtml"),
@@ -88,11 +88,6 @@ This is another regular paragraph.
     ("http://images.google.com/images?num=30&q=larry+bird",
       "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n"), # ---
 
-    ("""
-<a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
-""", """
-<p><a href="http://images.google.com/images?num=30&q=larry+bird">images</a></p>
-"""), # ---
 
     ("""
 <a href="http://images.google.com/images?num=30&q=larry+bird">images</a>
